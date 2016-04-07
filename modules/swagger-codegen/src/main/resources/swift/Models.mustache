@@ -38,7 +38,7 @@ public class Response<T> {
 
 private var once = dispatch_once_t()
 class Decoders {
-    static private var decoders = Dictionary<String, ((AnyObject) -> AnyObject)>()
+    static private var decoders = Dictionary<String, ((AnyObject) throws -> AnyObject)>()
     
     static func addDecoder<T>(clazz clazz: T.Type, decoder: ((AnyObject) throws -> T)) {
         let key = "\(T.self)"
