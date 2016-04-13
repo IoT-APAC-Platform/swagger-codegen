@@ -94,20 +94,24 @@ class AlamofireRequestBuilder<T>: RequestBuilder<T> {
                 return
             }
             if let json: AnyObject = response.result.value {
-                do {
-                    let body = try Decoders.decode(clazz: T.self, source: json)
-                    completion(response: Response(response: response.response!, body: body), error: nil)
+                if response.response?.statusCode >= 400 {
+                    completion(response: nil, error: self.buildError(json as! NSDictionary, response: response))
                 }
-                catch {
-                    let reason = NSHTTPURLResponse.localizedStringForStatusCode((response.response?.statusCode)!)
-                    let error = NSError(domain: "localhost",
-                                        code: (response.response?.statusCode)!,
-                                        userInfo: ["reason":reason,"response":response.result.value!])
-                    completion(response: nil,
-                               error: error)
-                    return
-                    
+                else
+                {
+                    do {
+                        let body = try Decoders.decode(clazz: T.self, source: json)
+                        completion(response: Response(response: response.response!, body: body), error: nil)
+                    }
+                    catch {
+                        let error = NSError(domain: (response.request?.URLString)!,
+                                            code: (response.response?.statusCode)!,
+                                            userInfo: ["request":response.request!])
+                        completion(response: nil, error: error)
+                        return
+                    }
                 }
+                
                 return
             } else if "" is T {
                 // swagger-parser currently doesn't support void, which will be fixed in future swagger-parser release
@@ -126,5 +130,28 @@ class AlamofireRequestBuilder<T>: RequestBuilder<T> {
             httpHeaders[key] = value
         }
         return httpHeaders
+    }
+    
+    private func buildError(json : NSDictionary, response: Alamofire.Response<AnyObject, NSError>) -> NSError {
+        
+        let reason = NSHTTPURLResponse.localizedStringForStatusCode((response.response?.statusCode)!)
+        do {
+            let errorString = (json["errorMessage"] != nil) ? json["errorMessage"] : json
+            let error = NSError(domain: (response.request?.URLString)!,
+                                code: (response.response?.statusCode)!,
+                                userInfo: [
+                                    "reason":reason,
+                                    "response":errorString!,
+                                    "request":response.request!])
+            return error
+            
+        } catch {
+            let error = NSError(domain: (response.request?.URLString)!,
+                                code: (response.response?.statusCode)!,
+                                userInfo: [
+                                    "reason":reason,
+                                    "request":response.request!])
+            return error
+        }
     }
 }
