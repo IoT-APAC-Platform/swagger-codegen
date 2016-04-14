@@ -133,25 +133,20 @@ class AlamofireRequestBuilder<T>: RequestBuilder<T> {
     }
     
     private func buildError(json : NSDictionary, response: Alamofire.Response<AnyObject, NSError>) -> NSError {
-        
-        let reason = NSHTTPURLResponse.localizedStringForStatusCode((response.response?.statusCode)!)
-        do {
-            let errorString = (json["errorMessage"] != nil) ? json["errorMessage"] : json
-            let error = NSError(domain: (response.request?.URLString)!,
-                                code: (response.response?.statusCode)!,
-                                userInfo: [
-                                    "reason":reason,
-                                    "response":errorString!,
-                                    "request":response.request!])
-            return error
-            
-        } catch {
-            let error = NSError(domain: (response.request?.URLString)!,
-                                code: (response.response?.statusCode)!,
-                                userInfo: [
-                                    "reason":reason,
-                                    "request":response.request!])
+
+        if let error = response.result.error {
             return error
         }
+        let reason = NSHTTPURLResponse.localizedStringForStatusCode((response.response?.statusCode)!)
+
+        let errorString = (json["errorMessage"] != nil) ? json["errorMessage"] : json
+        let error = NSError(domain: (response.request?.URLString)!,
+                            code: (response.response?.statusCode)!,
+                            userInfo: [
+                                "reason":reason,
+                                "response":errorString!,
+                                "request":response.request!])
+        return error
+
     }
 }
