@@ -11,8 +11,8 @@ import java.util.Objects;
 
 
 @ApiModel(description = "")
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.SpringMVCServerCodegen", date = "2016-04-17T17:49:05.879+08:00")
-public class ApiResponse  {
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.SpringMVCServerCodegen", date = "2016-04-22T17:54:58.453+08:00")
+public class ModelApiResponse  {
   
   private Integer code = null;
   private String type = null;
@@ -60,10 +60,10 @@ public class ApiResponse  {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ApiResponse apiResponse = (ApiResponse) o;
-    return Objects.equals(code, apiResponse.code) &&
-        Objects.equals(type, apiResponse.type) &&
-        Objects.equals(message, apiResponse.message);
+    ModelApiResponse _apiResponse = (ModelApiResponse) o;
+    return Objects.equals(code, _apiResponse.code) &&
+        Objects.equals(type, _apiResponse.type) &&
+        Objects.equals(message, _apiResponse.message);
   }
 
   @Override
@@ -74,7 +74,7 @@ public class ApiResponse  {
   @Override
   public String toString()  {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ApiResponse {\n");
+    sb.append("class ModelApiResponse {\n");
     
     sb.append("  code: ").append(code).append("\n");
     sb.append("  type: ").append(type).append("\n");
