@@ -52,12 +52,20 @@ class Decoders {
         return try array.map { try Decoders.decode(clazz: T.self, source: $0) }
     }
     
+<<<<<<< HEAD
     static func decode<T, Key: Hashable>(clazz clazz: [Key:T].Type, source: AnyObject) throws -> [Key:T] {
         var dictionary = [Key:T]()
         if let sourceDictinoary = source as? [Key: AnyObject] {
             for (key, value) in sourceDictinoary {
                 dictionary[key] = try Decoders.decode(clazz: T.self, source: value)
             }
+=======
+    static func decode<T, Key: Hashable>(clazz clazz: [Key:T].Type, source: AnyObject) -> [Key:T] {
+        let sourceDictionary = source as! [Key: AnyObject]
+        var dictionary = [Key:T]()
+        for (key, value) in sourceDictionary {
+            dictionary[key] = Decoders.decode(clazz: T.self, source: value)
+>>>>>>> swagger-api/master
         }
 
         return dictionary

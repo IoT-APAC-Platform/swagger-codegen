@@ -25,23 +25,15 @@ For valid response try integer IDs with value < 1000. Anything above 1000 or non
 
 NSString* orderId = @"orderId_example"; // ID of the order that needs to be deleted
 
-@try
-{ 
-    SWGStoreApi *apiInstance = [[SWGStoreApi alloc] init];
+SWGStoreApi*apiInstance = [[SWGStoreApi alloc] init];
 
-    // Delete purchase order by ID
-    [apiInstance deleteOrderWithOrderId:orderId
-              completionHandler: ^(NSError* error) {
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
-}
-@catch (NSException *exception)
-{
-    NSLog(@"Exception when calling SWGStoreApi->deleteOrder: %@ ", exception.name);
-    NSLog(@"Reason: %@ ", exception.reason);
-}
+// Delete purchase order by ID
+[apiInstance deleteOrderWithOrderId:orderId
+          completionHandler: ^(NSError* error) {
+                        if (error) {
+                            NSLog(@"Error calling SWGStoreApi->deleteOrder: %@", error);
+                        }
+                    }];
 ```
 
 ### Parameters
@@ -68,7 +60,7 @@ No authorization required
 # **getInventory**
 ```objc
 -(NSNumber*) getInventoryWithCompletionHandler: 
-        (void (^)(NSDictionary* /* NSString, NSNumber */ output, NSError* error)) handler;
+        (void (^)(NSDictionary<NSString*, NSNumber*>* output, NSError* error)) handler;
 ```
 
 Returns pet inventories by status
@@ -81,31 +73,23 @@ SWGConfiguration *apiConfig = [SWGConfiguration sharedConfig];
 
 // Configure API key authorization: (authentication scheme: api_key)
 [apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"api_key"];
-// Uncomment below to setup prefix (e.g. BEARER) for API key, if needed
-//[apiConfig setApiKeyPrefix:@"BEARER" forApiKeyIdentifier:@"api_key"];
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"api_key"];
 
 
 
-@try
-{ 
-    SWGStoreApi *apiInstance = [[SWGStoreApi alloc] init];
+SWGStoreApi*apiInstance = [[SWGStoreApi alloc] init];
 
-    // Returns pet inventories by status
-    [apiInstance getInventoryWithCompletionHandler: 
-              ^(NSDictionary* /* NSString, NSNumber */ output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
-}
-@catch (NSException *exception)
-{
-    NSLog(@"Exception when calling SWGStoreApi->getInventory: %@ ", exception.name);
-    NSLog(@"Reason: %@ ", exception.reason);
-}
+// Returns pet inventories by status
+[apiInstance getInventoryWithCompletionHandler: 
+          ^(NSDictionary<NSString*, NSNumber*>* output, NSError* error) {
+                        if (output) {
+                            NSLog(@"%@", output);
+                        }
+                        if (error) {
+                            NSLog(@"Error calling SWGStoreApi->getInventory: %@", error);
+                        }
+                    }];
 ```
 
 ### Parameters
@@ -113,7 +97,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**NSDictionary* /* NSString, NSNumber */**](NSDictionary.md)
+[**NSDictionary<NSString*, NSNumber*>***](NSDictionary.md)
 
 ### Authorization
 
@@ -141,26 +125,18 @@ For valid response try integer IDs with value <= 5 or > 10. Other values will ge
 
 NSString* orderId = @"orderId_example"; // ID of pet that needs to be fetched
 
-@try
-{ 
-    SWGStoreApi *apiInstance = [[SWGStoreApi alloc] init];
+SWGStoreApi*apiInstance = [[SWGStoreApi alloc] init];
 
-    // Find purchase order by ID
-    [apiInstance getOrderByIdWithOrderId:orderId
-              completionHandler: ^(SWGOrder* output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
-}
-@catch (NSException *exception)
-{
-    NSLog(@"Exception when calling SWGStoreApi->getOrderById: %@ ", exception.name);
-    NSLog(@"Reason: %@ ", exception.reason);
-}
+// Find purchase order by ID
+[apiInstance getOrderByIdWithOrderId:orderId
+          completionHandler: ^(SWGOrder* output, NSError* error) {
+                        if (output) {
+                            NSLog(@"%@", output);
+                        }
+                        if (error) {
+                            NSLog(@"Error calling SWGStoreApi->getOrderById: %@", error);
+                        }
+                    }];
 ```
 
 ### Parameters
@@ -199,26 +175,18 @@ Place an order for a pet
 
 SWGOrder* body = [[SWGOrder alloc] init]; // order placed for purchasing the pet (optional)
 
-@try
-{ 
-    SWGStoreApi *apiInstance = [[SWGStoreApi alloc] init];
+SWGStoreApi*apiInstance = [[SWGStoreApi alloc] init];
 
-    // Place an order for a pet
-    [apiInstance placeOrderWithBody:body
-              completionHandler: ^(SWGOrder* output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
-}
-@catch (NSException *exception)
-{
-    NSLog(@"Exception when calling SWGStoreApi->placeOrder: %@ ", exception.name);
-    NSLog(@"Reason: %@ ", exception.reason);
-}
+// Place an order for a pet
+[apiInstance placeOrderWithBody:body
+          completionHandler: ^(SWGOrder* output, NSError* error) {
+                        if (output) {
+                            NSLog(@"%@", output);
+                        }
+                        if (error) {
+                            NSLog(@"Error calling SWGStoreApi->placeOrder: %@", error);
+                        }
+                    }];
 ```
 
 ### Parameters

@@ -4,7 +4,7 @@ import io.swagger.codegen.*;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.Swagger;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.util.*;
@@ -31,6 +31,7 @@ public class JavaResteasyServerCodegen extends JavaClientCodegen implements Code
         apiTemplateFiles.put("apiService.mustache", ".java");
         apiTemplateFiles.put("apiServiceImpl.mustache", ".java");
         apiTemplateFiles.put("apiServiceFactory.mustache", ".java");
+        apiTestTemplateFiles.clear(); // TODO: add test template
         apiPackage = "io.swagger.api";
         modelPackage = "io.swagger.model";
 

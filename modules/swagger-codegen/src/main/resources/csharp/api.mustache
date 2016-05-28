@@ -1,3 +1,4 @@
+{{>partial_header}}
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,7 +14,7 @@ namespace {{packageName}}.Api
     /// <summary>
     /// Represents a collection of functions to interact with the API endpoints
     /// </summary>
-    public interface I{{classname}}
+    public interface I{{classname}} : IApiAccessor
     {
         #region Synchronous Operations
         {{#operation}}
@@ -72,7 +73,7 @@ namespace {{packageName}}.Api
     /// <summary>
     /// Represents a collection of functions to interact with the API endpoints
     /// </summary>
-    public class {{classname}} : I{{classname}}
+    public partial class {{classname}} : I{{classname}}
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="{{classname}}"/> class.
@@ -122,7 +123,7 @@ namespace {{packageName}}.Api
         /// Sets the base path of the API client.
         /// </summary>
         /// <value>The base path</value>
-        [Obsolete("SetBasePath is deprecated, please do 'Configuraiton.ApiClient = new ApiClient(\"http://new-path\")' instead.")]
+        [Obsolete("SetBasePath is deprecated, please do 'Configuration.ApiClient = new ApiClient(\"http://new-path\")' instead.")]
         public void SetBasePath(String basePath)
         {
             // do nothing
@@ -196,7 +197,7 @@ namespace {{packageName}}.Api
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
                 {{#consumes}}
-                "{{mediaType}}"{{#hasMore}}, {{/hasMore}}
+                "{{{mediaType}}}"{{#hasMore}}, {{/hasMore}}
                 {{/consumes}}
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
@@ -204,7 +205,7 @@ namespace {{packageName}}.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 {{#produces}}
-                "{{mediaType}}"{{#hasMore}}, {{/hasMore}}
+                "{{{mediaType}}}"{{#hasMore}}, {{/hasMore}}
                 {{/produces}}
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
@@ -227,7 +228,7 @@ namespace {{packageName}}.Api
             if ({{paramName}} != null) {{#isFile}}localVarFileParams.Add("{{baseName}}", Configuration.ApiClient.ParameterToFile("{{baseName}}", {{paramName}}));{{/isFile}}{{^isFile}}localVarFormParams.Add("{{baseName}}", Configuration.ApiClient.ParameterToString({{paramName}})); // form parameter{{/isFile}}
             {{/formParams}}
             {{#bodyParam}}
-            if ({{paramName}}.GetType() != typeof(byte[]))
+            if ({{paramName}} != null && {{paramName}}.GetType() != typeof(byte[]))
             {
                 localVarPostBody = Configuration.ApiClient.Serialize({{paramName}}); // http body (model) parameter
             }
@@ -329,7 +330,7 @@ namespace {{packageName}}.Api
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
                 {{#consumes}}
-                "{{mediaType}}"{{#hasMore}}, {{/hasMore}}
+                "{{{mediaType}}}"{{#hasMore}}, {{/hasMore}}
                 {{/consumes}}
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
@@ -337,7 +338,7 @@ namespace {{packageName}}.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 {{#produces}}
-                "{{mediaType}}"{{#hasMore}}, {{/hasMore}}
+                "{{{mediaType}}}"{{#hasMore}}, {{/hasMore}}
                 {{/produces}}
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
@@ -360,7 +361,7 @@ namespace {{packageName}}.Api
             if ({{paramName}} != null) {{#isFile}}localVarFileParams.Add("{{baseName}}", Configuration.ApiClient.ParameterToFile("{{baseName}}", {{paramName}}));{{/isFile}}{{^isFile}}localVarFormParams.Add("{{baseName}}", Configuration.ApiClient.ParameterToString({{paramName}})); // form parameter{{/isFile}}
             {{/formParams}}
             {{#bodyParam}}
-            if ({{paramName}}.GetType() != typeof(byte[]))
+            if ({{paramName}} != null && {{paramName}}.GetType() != typeof(byte[]))
             {
                 localVarPostBody = Configuration.ApiClient.Serialize({{paramName}}); // http body (model) parameter
             }
