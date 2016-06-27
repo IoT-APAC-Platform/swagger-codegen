@@ -52,20 +52,13 @@ class Decoders {
         return try array.map { try Decoders.decode(clazz: T.self, source: $0) }
     }
     
-<<<<<<< HEAD
     static func decode<T, Key: Hashable>(clazz clazz: [Key:T].Type, source: AnyObject) throws -> [Key:T] {
         var dictionary = [Key:T]()
         if let sourceDictinoary = source as? [Key: AnyObject] {
             for (key, value) in sourceDictinoary {
                 dictionary[key] = try Decoders.decode(clazz: T.self, source: value)
             }
-=======
-    static func decode<T, Key: Hashable>(clazz clazz: [Key:T].Type, source: AnyObject) -> [Key:T] {
-        let sourceDictionary = source as! [Key: AnyObject]
-        var dictionary = [Key:T]()
-        for (key, value) in sourceDictionary {
-            dictionary[key] = Decoders.decode(clazz: T.self, source: value)
->>>>>>> swagger-api/master
+
         }
 
         return dictionary
@@ -159,17 +152,10 @@ class Decoders {
             }
             // Decoder for {{{classname}}}
             Decoders.addDecoder(clazz: {{{classname}}}.self) { (source: AnyObject) -> {{{classname}}} in
-<<<<<<< HEAD
 
                 let instance = {{{classname}}}()
 
                 if let sourceDictionary = source as? [NSObject:AnyObject] {
-                    {{#vars}}{{#isEnum}}
-                    instance.{{name}} = {{classname}}.{{datatypeWithEnum}}(rawValue: (sourceDictionary["{{baseName}}"] as? String) ?? ""){{#unwrapRequired}}{{#required}}!{{/required}}{{/unwrapRequired}} {{/isEnum}}{{^isEnum}}
-                    instance.{{name}} = try Decoders.decode{{^unwrapRequired}}Optional{{/unwrapRequired}}{{#unwrapRequired}}{{^required}}Optional{{/required}}{{/unwrapRequired}}(clazz: {{{baseType}}}.self, source: sourceDictionary["{{baseName}}"]{{#unwrapRequired}}{{#required}}!{{/required}}{{/unwrapRequired}}){{/isEnum}}{{/vars}}
-                }
-=======
-                let sourceDictionary = source as! [NSObject:AnyObject]
                 {{#unwrapRequired}}
                 let instance = {{classname}}({{#requiredVars}}{{^-first}}, {{/-first}}{{#isEnum}}{{name}}: {{classname}}.{{datatypeWithEnum}}(rawValue: (sourceDictionary["{{baseName}}"] as? String) ?? "")! {{/isEnum}}{{^isEnum}}{{name}}: Decoders.decode(clazz: {{{baseType}}}.self, source: sourceDictionary["{{baseName}}"]!){{/isEnum}}{{/requiredVars}})
                 {{#optionalVars}}
@@ -177,16 +163,19 @@ class Decoders {
                 instance.{{name}} = {{classname}}.{{datatypeWithEnum}}(rawValue: (sourceDictionary["{{baseName}}"] as? String) ?? "")
                 {{/isEnum}}
                 {{^isEnum}}
-                instance.{{name}} = Decoders.decodeOptional(clazz: {{{baseType}}}.self, source: sourceDictionary["{{baseName}}"])
+                instance.{{name}} = try Decoders.decodeOptional(clazz: {{{baseType}}}.self, source: sourceDictionary["{{baseName}}"])
                 {{/isEnum}}
                 {{/optionalVars}}
                 {{/unwrapRequired}}
                 {{^unwrapRequired}}
                 let instance = {{classname}}(){{#vars}}{{#isEnum}}
                 instance.{{name}} = {{classname}}.{{datatypeWithEnum}}(rawValue: (sourceDictionary["{{baseName}}"] as? String) ?? "") {{/isEnum}}{{^isEnum}}
-                instance.{{name}} = Decoders.decodeOptional(clazz: {{{baseType}}}.self, source: sourceDictionary["{{baseName}}"]){{/isEnum}}{{/vars}}
+                instance.{{name}} = try Decoders.decodeOptional(clazz: {{{baseType}}}.self, source: sourceDictionary["{{baseName}}"]){{/isEnum}}{{/vars}}
                 {{/unwrapRequired}}
->>>>>>> swagger-api/master
+				
+				return instance
+                }
+
                 return instance
             }{{/model}}
 			{{/models}}
