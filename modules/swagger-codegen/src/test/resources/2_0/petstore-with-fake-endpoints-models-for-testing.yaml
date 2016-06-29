@@ -561,6 +561,47 @@ paths:
           description: User not found
 
   /fake:
+    get:
+      tags:
+        - fake
+      summary: To test enum query parameters
+      descriptions: To test enum query parameters
+      operationId: testEnumQueryParameters
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: enum_query_string
+          type: string
+          default: '-efg'
+          enum:
+            - _abc
+            - '-efg'
+            - (xyz)
+          in: formData 
+          description: Query parameter enum test (string)
+        - name: enum_query_integer
+          type: number
+          format: int32 
+          enum:
+            - 1
+            - -2
+          in: query
+          description: Query parameter enum test (double)
+        - name: enum_query_double
+          type: number
+          format: double 
+          enum:
+            - 1.1
+            - -1.2
+          in: formData
+          description: Query parameter enum test (double)
+      responses:
+        '400':
+          description: Invalid request
+        '404':
+          description: Not found
     post:
       tags:
         - fake 
@@ -717,6 +758,7 @@ definitions:
       id:
         type: integer
         format: int64
+        x-is-unique: true
       username:
         type: string
       firstName:
@@ -754,6 +796,7 @@ definitions:
       id:
         type: integer
         format: int64
+        x-is-unique: true
       category:
         $ref: '#/definitions/Category'
       name:
@@ -832,6 +875,8 @@ definitions:
       name:
         type: integer
         format: int32
+      class:
+        type: string 
     xml:
       name: Name
   Dog:
@@ -949,8 +994,17 @@ definitions:
           - -1.2
   AdditionalPropertiesClass:
     type: object
-    additionalProperties:
-      type: string
+    properties:
+      map_property:
+        type: object
+        additionalProperties:
+          type: string
+      map_of_map_property:
+        type: object
+        additionalProperties:
+          type: object
+          additionalProperties:
+            type: string
   MixedPropertiesAndAdditionalPropertiesClass:
     type: object
     properties:
@@ -960,9 +1014,10 @@ definitions:
       dateTime:
         type: string
         format: date-time
-    additionalProperties:
-      type: string
-      $ref: '#/definitions/Animal'
+      map: 
+        type: object
+        additionalProperties:
+          $ref: '#/definitions/Animal'
   ReadOnlyFirst:
     type: object
     properties:
@@ -971,25 +1026,88 @@ definitions:
         readOnly: true
       baz:
         type: string
+  hasOnlyReadOnly:
+    type: object
+    properties:
+      bar:
+        type: string
+        readOnly: true
+      foo:
+        type: string
+        readOnly: true
+  MapTest:
+    type: object
+    properties:
+      map_map_of_string:
+        type: object
+        additionalProperties:
+          type: object
+          additionalProperties:
+            type: string  
+      map_map_of_enum:
+        type: object
+        additionalProperties:
+          type: object
+          additionalProperties:
+            type: string  
+            enum:
+              - UPPER
+              - lower
+      map_of_enum_string:
+        type: object
+        additionalProperties:
+          type: string
+          enum:
+            - UPPER
+            - lower
   ArrayTest:
     type: object
-    array_of_string:
-      type: array
-      items:
-        type: string
-    array_array_of_integer:
-      type: array
-      items:
+    properties:
+      array_of_string:
         type: array
         items:
-          type: integer
-          format: int64
-    array_array_of_model:
-      type: array
-      items:
+          type: string
+      array_array_of_integer:
         type: array
         items:
-          $ref: '#/definitions/ReadOnlyFirst'
+          type: array
+          items:
+            type: integer
+            format: int64
+      array_array_of_model:
+        type: array
+        items:
+          type: array
+          items:
+            $ref: '#/definitions/ReadOnlyFirst'
+      array_of_enum:
+        type: array
+        items:
+          type: string
+          enum:
+            - UPPER
+            - lower
+  NumberOnly:
+    type: object
+    properties:
+      JustNumber:
+        type: number
+  ArrayOfNumberOnly:
+    type: object
+    properties:
+      ArrayNumber:
+        type: array
+        items:
+          type: number
+  ArrayOfArrayOfNumberOnly:
+    type: object
+    properties:
+      ArrayArrayNumber:
+        type: array
+        items:
+          type: array
+          items:
+            type: number
 externalDocs:
   description: Find out more about Swagger
   url: 'http://swagger.io'

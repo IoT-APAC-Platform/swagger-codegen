@@ -77,7 +77,6 @@ if(hasProperty('target') && target == 'android') {
 
     apply plugin: 'java'
     apply plugin: 'maven'
-
     sourceCompatibility = JavaVersion.VERSION_1_7
     targetCompatibility = JavaVersion.VERSION_1_7
 
@@ -94,7 +93,7 @@ if(hasProperty('target') && target == 'android') {
 }
 
 ext {
-    swagger_annotations_version = "1.5.0"
+    swagger_annotations_version = "1.5.8"
     jackson_version = "2.7.0"
     jersey_version = "2.22.2"
     jodatime_version = "2.9.3"

@@ -41,19 +41,6 @@ Check out [Swagger-Spec](https://github.com/OAI/OpenAPI-Specification) for addit
     - [Generating dynamic html api documentation](#generating-dynamic-html-api-documentation)
     - [Generating static html api documentation](#generating-static-html-api-documentation)
     - [To build a server stub](#to-build-a-server-stub)
-      - [Node.js](#nodejs)
-      - [PHP Slim](#php-slim)
-      - [PHP Silex](#php-silex)
-      - [Python Flask (Connexion)](#python-flask-connexion)
-      - [Ruby Sinatra](#ruby-sinatra)
-      - [Scala Scalatra](#scala-scalatra)
-      - [Java JAX-RS (Java JAX-RS (Jersey v1.18)](#java-jax-rs-jersey-v118)
-      - [Java JAX-RS (Apache CXF 2 / 3)](#java-jax-rs-apache-cxf-2--3)
-      - [Java JAX-RS (Resteasy)](#java-jax-rs-resteasy)      
-      - [Java Spring MVC](#java-spring-mvc)
-      - [Java SpringBoot](#java-springboot)
-      - [Haskell Servant](#haskell-servant)
-      - [ASP.NET 5 Web API](#aspnet-5-web-api)
     - [To build the codegen library](#to-build-the-codegen-library)
   - [Workflow Integration](#workflow-integration)
   - [Github Integration](#github-integration)
@@ -408,6 +395,44 @@ java -Dapis -DmodelTests=false {opts}
 
 When using selective generation, _only_ the templates needed for the specific generation will be used.
 
+### Ignore file format
+
+Swagger codegen supports a `.swagger-codegen-ignore` file, similar to `.gitignore` or `.dockerignore` you're probably already familiar with.
+
+The ignore file allows for better control over overwriting existing files than the `--skip-overwrite` flag. With the ignore file, you can specify individual files or directories can be ignored. This can be useful, for example if you only want a subset of the generated code.
+
+Examples:
+
+```
+# Swagger Codegen Ignore
+# Lines beginning with a # are comments
+
+# This should match build.sh located anywhere.
+build.sh
+
+# Matches build.sh in the root
+/build.sh
+
+# Exclude all recursively
+docs/**
+
+# Explicitly allow files excluded by other rules
+!docs/UserApi.md
+
+# Recursively exclude directories named Api
+# You can't negate files below this directory.
+src/**/Api/
+
+# When this file is nested under /Api (excluded above),
+# this rule is ignored because parent directory is excluded by previous rule.
+!src/**/PetApiTests.cs
+
+# Exclude a single, nested file explicitly
+src/IO.Swagger.Test/Model/AnimalFarmTests.cs
+```
+
+The `.swagger-codegen-ignore` file must exist in the root of the output directory.
+
 ### Customizing the generator
 
 There are different aspects of customizing the code generator beyond just creating or modifying templates.  Each language has a supporting configuration file to handle different type mappings, etc:
@@ -436,6 +461,7 @@ JavaJerseyServerCodegen.java
 JavaResteasyServerCodegen.java
 JavascriptClientCodegen.java
 NodeJSServerCodegen.java
+NancyFXServerCodegen
 ObjcClientCodegen.java
 PerlClientCodegen.java
 PhpClientCodegen.java
@@ -603,155 +629,7 @@ open index.html
 
 ### To build a server stub
 
-You can also use the codegen to generate a server for a couple different frameworks.  Take a look here:
-
-### Node.js
-
-```
-java -jar modules/swagger-codegen-cli/target/swagger-codegen-cli.jar generate \
-  -i http://petstore.swagger.io/v2/swagger.json \
-  -l nodejs-server \
-  -o samples/server/petstore/nodejs
-```
-
-### PHP Slim
-
-```
-java -jar modules/swagger-codegen-cli/target/swagger-codegen-cli.jar generate \
-  -i http://petstore.swagger.io/v2/swagger.json \
-  -l slim \
-  -o samples/server/petstore/slim
-```
-
-### PHP Silex
-
-```
-java -jar modules/swagger-codegen-cli/target/swagger-codegen-cli.jar generate \
-  -i http://petstore.swagger.io/v2/swagger.json \
-  -l silex-PHP \
-  -o samples/server/petstore/silex
-```
-
-### Python Flask (Connexion)
-
-```
-java -jar modules/swagger-codegen-cli/target/swagger-codegen-cli.jar generate \
-  -i http://petstore.swagger.io/v2/swagger.json \
-  -l python-flask \
-  -o samples/server/petstore/flaskConnexion
-```
-
-### Ruby Sinatra
-
-```
-java -jar modules/swagger-codegen-cli/target/swagger-codegen-cli.jar generate \
-  -i http://petstore.swagger.io/v2/swagger.json \
-  -l sinatra \
-  -o samples/server/petstore/sinatra
-```
-
-### Scala Scalatra
-```
-java -jar modules/swagger-codegen-cli/target/swagger-codegen-cli.jar generate \
-  -i http://petstore.swagger.io/v2/swagger.json \
-  -l scalatra \
-  -o samples/server/petstore/scalatra
-```
-
-### Java JAX-RS (Jersey v1.18)
-
-```
-java -jar modules/swagger-codegen-cli/target/swagger-codegen-cli.jar generate \
-  -i http://petstore.swagger.io/v2/swagger.json \
-  -l jaxrs \
-  -o samples/server/petstore/jaxrs-jersey
-```
-
-### Java JAX-RS (Apache CXF 2 / 3)
-
-```
-java -jar modules/swagger-codegen-cli/target/swagger-codegen-cli.jar generate \
-  -i http://petstore.swagger.io/v2/swagger.json \
-  -l jaxrs-cxf \
-  -o samples/server/petstore/jaxrs-cxf
-```
-
-This Codegen only generate a minimalist server stub. You must add the CXF dependency to your classpath (eg: with Maven)
-If you are using CXF v2.x, you must provided a custom ```ResourceComparator``` class. This class will help CXF to choose the good resource interface for mapping an incomming request. The default behavior of CXF v2.x is not correct when many resources interface have the same global path.
-See: See http://cxf.apache.org/docs/jax-rs-basics.html#JAX-RSBasics-Customselectionbetweenmultipleresources
-
-You can found this class here: https://github.com/hiveship/CXF2-resource-comparator/blob/master/src/main/java/CXFInterfaceComparator.java
-TODO: This class could be directly generated by the Codegen.
-
-You must register this class into your JAX-RS configuration file:
-```xml
-         <jaxrs:resourceComparator>
-   			<bean class="your.package.CXFInterfaceComparator"/>
-		</jaxrs:resourceComparator> 
-```
-
-This is no longer necessary if you are using CXF >=v3.x
-
-### Java JAX-RS (Resteasy)
-
-```
-java -jar modules/swagger-codegen-cli/target/swagger-codegen-cli.jar generate \
-  -i http://petstore.swagger.io/v2/swagger.json \
-  -l jaxrs-resteasy \
-  -o samples/server/petstore/jaxrs-resteasy
-```
-
-### Java Spring MVC
-
-```
-java -jar modules/swagger-codegen-cli/target/swagger-codegen-cli.jar generate \
-  -i http://petstore.swagger.io/v2/swagger.json \
-  -l spring-mvc \
-  -o samples/server/petstore/spring-mvc
-```
-
-### Java SpringBoot
-
-```
-java -jar modules/swagger-codegen-cli/target/swagger-codegen-cli.jar generate \
-  -i http://petstore.swagger.io/v2/swagger.json \
-  -l springboot \
-  -o samples/server/petstore/springboot
-```
-
-You can also set a Json file with basePackage & configPackage properties :  
-Example : 
-```
-{
-"basePackage":"io.swagger",
-"configPackage":"io.swagger.config"
-}
-```
-For use it  add option ```-c myOptions.json```  to the generation command    
-
-To Use-it :
-in the generated folder try ``` mvn package ``` for build jar.  
-Start your server  ``` java -jar target/swagger-springboot-server-1.0.0.jar ```  
-SpringBoot listening on default port 8080
-
-
-### Haskell Servant
-
-```
-java -jar modules/swagger-codegen-cli/target/swagger-codegen-cli.jar generate \
-  -i http://petstore.swagger.io/v2/swagger.json \
-  -l haskell-servant \
-  -o samples/server/petstore/haskell-servant
-```
-
-### ASP.NET 5 Web API
-
-```
-java -jar modules/swagger-codegen-cli/target/swagger-codegen-cli.jar generate \
-  -i http://petstore.swagger.io/v2/swagger.json \
-  -l aspnet5 \
-  -o samples/server/petstore/aspnet5
-```
+Please refer to https://github.com/swagger-api/swagger-codegen/wiki/Server-stub-generator-HOWTO for more information.
 
 ### To build the codegen library
 
@@ -798,6 +676,52 @@ curl -X POST -H "content-type:application/json" -d '{"swaggerUrl":"http://petsto
 ```
 Then you will receieve a JSON response with the URL to download the zipped code.
 
+To customize the SDK, you can `POST` to `https://generator.swagger.io/gen/clients/{language}` with the following HTTP body:
+```
+{
+  "options": {},
+  "swaggerUrl": "http://petstore.swagger.io/v2/swagger.json"
+}
+```
+in which the `options` for a language can be obtained by submitting a `GET` request to `https://generator.swagger.io/api/gen/clients/{language}`:
+
+For example, `curl https://generator.swagger.io/api/gen/clients/python` returns
+```
+{
+  "packageName":{
+    "opt":"packageName",
+    "description":"python package name (convention: snake_case).",
+    "type":"string",
+    "default":"swagger_client"
+  },
+  "packageVersion":{
+    "opt":"packageVersion",
+    "description":"python package version.",
+    "type":"string",
+    "default":"1.0.0"
+  },
+  "sortParamsByRequiredFlag":{
+    "opt":"sortParamsByRequiredFlag",
+    "description":"Sort method arguments to place required parameters before optional parameters.",
+    "type":"boolean",
+    "default":"true"
+  }
+}
+```
+To set package name to `pet_store`, the HTTP body of the request is as follows:
+```
+{
+  "options": {
+    "packageName": "pet_store"
+  },
+  "swaggerUrl": "http://petstore.swagger.io/v2/swagger.json"
+}
+```
+and here is the curl command:
+```
+curl -H "Content-type: application/json" -X POST -d '{"options": {"packageName": "pet_store"},"swaggerUrl": "http://petstore.swagger.io/v2/swagger.json"}' https://generator.swagger.io/api/gen/clients/python
+```
+
 Guidelines for Contribution
 ---------------------------
 
@@ -809,6 +733,7 @@ Here are some companies/projects using Swagger Codegen in production. To add you
 - [Activehours](https://www.activehours.com/)
 - [Acunetix](https://www.acunetix.com/)
 - [Atlassian](https://www.atlassian.com/)
+- [Avenida Compras S.A.](https://www.avenida.com.ar)
 - [beemo](http://www.beemo.eu)
 - [bitly](https://bitly.com)
 - [Cachet Financial](http://www.cachetfinancial.com/)
@@ -820,12 +745,19 @@ Here are some companies/projects using Swagger Codegen in production. To add you
 - [eureka](http://eure.jp/)
 - [everystory.us](http://everystory.us)
 - [Expected Behavior](http://www.expectedbehavior.com/)
+- [Finder](http://en.finder.pl/)
 - [FH Münster - University of Applied Sciences](http://www.fh-muenster.de)
+- [GraphHopper](https://graphhopper.com/)
+- [Gravitate Solutions](http://gravitatesolutions.com/)
 - [IMS Health](http://www.imshealth.com/en/solution-areas/technology-and-applications)
 - [Interactive Intelligence](http://developer.mypurecloud.com/)
 - [LANDR Audio](https://www.landr.com/)
+- [Lascaux](http://www.lascaux.it/)
 - [LiveAgent](https://www.ladesk.com/)
+- [Kabuku](http://www.kabuku.co.jp/en)
+- [Kuroi](http://kuroiwebdesign.com/)
 - [Kuary](https://kuary.com/)
+- [Mporium](http://mporium.com/) 
 - [nViso](http://www.nviso.ch/)
 - [Okiok](https://www.okiok.com)
 - [OSDN](https://osdn.jp)
@@ -843,6 +775,8 @@ Here are some companies/projects using Swagger Codegen in production. To add you
 - [Svenska Spel AB](https://www.svenskaspel.se/)
 - [ThoughtWorks](https://www.thoughtworks.com)
 - [uShip](https://www.uship.com/)
+- [W.UP](http://wup.hu/?siteLang=en)
+- [Wealthfront](https://www.wealthfront.com/)
 - [WEXO A/S](https://www.wexo.dk/)
 - [Zalando](https://tech.zalando.com)
 - [ZEEF.com](https://zeef.com/)
@@ -852,7 +786,7 @@ Here are some companies/projects using Swagger Codegen in production. To add you
 Swaagger Codegen core team members are contributors who have been making signficiant contributions (review issues, fix bugs, make enhancements, etc) to the project on a regular basis.
 
 ## API Clients
-| Langauges     | Core Team (join date) | 
+| Languages     | Core Team (join date) | 
 |:-------------|:-------------| 
 | ActionScript | |
 | C++      |  |  
@@ -861,7 +795,7 @@ Swaagger Codegen core team members are contributors who have been making signfic
 | Dart      |  |  
 | Groovy     |  |  
 | Go     |  @guohuang (2016/05/01) @neilotoole (2016/05/01) |  
-| Java      | @cbornet (2016/05/01) @xhh (2016/05/01) |
+| Java      | @cbornet (2016/05/01) @xhh (2016/05/01) @epaul (2016/06/04) |
 | NodeJS/Javascript | @xhh (2016/05/01) | 
 | ObjC      | @mateuszmackowiak (2016/05/09) |
 | Perl      | @wing328 (2016/05/01) |
@@ -875,13 +809,15 @@ Swaagger Codegen core team members are contributors who have been making signfic
 | TypeScript (Angular2) | @Vrolijkx (2016/05/01) |
 | TypeScript (Fetch) |  |
 ## Server Stubs
-| Langauges     | Core Team (date joined) | 
+| Languages     | Core Team (date joined) | 
 |:------------- |:-------------| 
 | C# ASP.NET5 |  @jimschubert (2016/05/01) |
+| Go Server | @guohuang (2016/06/13) |
 | Haskell Servant |  |
 | Java Spring Boot |  |
 | Java SpringMVC | @kolyjjj (2016/05/01) |
 | Java JAX-RS |  |
+| NancyFX |  |
 | NodeJS | @kolyjjj (2016/05/01) |  
 | PHP Lumen | @abcsum (2016/05/01) |
 | PHP Silex |  |
@@ -894,6 +830,7 @@ Swaagger Codegen core team members are contributors who have been making signfic
 Here is a list of template creators:
  * API Clients:
    * Akka-Scala: @cchafer 
+   * C++ REST: @Danielku15
    * C# (.NET 2.0): @who
    * Clojure: @xhh
    * Dart: @yissachar  
@@ -913,6 +850,8 @@ Here is a list of template creators:
    * TypeScript (Angular2): @roni-frantchi
  * Server Stubs
    * C# ASP.NET5: @jimschubert
+   * C# NancyFX: @mstefaniuk
+   * Go Server: @guohuang
    * Haskell Servant: @algas
    * Java Spring Boot: @diyfr
    * JAX-RS RestEasy: @chameleon82
