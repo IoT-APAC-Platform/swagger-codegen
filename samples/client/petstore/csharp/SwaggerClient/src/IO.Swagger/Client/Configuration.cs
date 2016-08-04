@@ -1,7 +1,7 @@
 /* 
  * Swagger Petstore
  *
- * This spec is mainly for testing Petstore server and contains fake endpoints, models. Please do not use this for any other purpose. Special characters: \" \\ 
+ * This spec is mainly for testing Petstore server and contains fake endpoints, models. Please do not use this for any other purpose. Special characters: \" \\
  *
  * OpenAPI spec version: 1.0.0
  * Contact: apiteam@swagger.io
@@ -179,7 +179,28 @@ namespace IO.Swagger.Client
         /// <returns></returns>
         public void AddDefaultHeader(string key, string value)
         {
-            _defaultHeaderMap.Add(key, value);
+            _defaultHeaderMap[key] = value;
+        }
+
+        /// <summary>
+        /// Add Api Key Header.
+        /// </summary>
+        /// <param name="key">Api Key name.</param>
+        /// <param name="value">Api Key value.</param>
+        /// <returns></returns>
+        public void AddApiKey(string key, string value)
+        {
+            ApiKey[key] = value;
+        }
+
+        /// <summary>
+        /// Sets the API key prefix.
+        /// </summary>
+        /// <param name="key">Api Key name.</param>
+        /// <param name="value">Api Key value.</param>
+        public void AddApiKeyPrefix(string key, string value)
+        {
+            ApiKeyPrefix[key] = value;
         }
 
         /// <summary>

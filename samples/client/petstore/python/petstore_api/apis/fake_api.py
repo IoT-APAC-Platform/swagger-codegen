@@ -51,9 +51,9 @@ class FakeApi(object):
                 config.api_client = ApiClient()
             self.api_client = config.api_client
 
-    def test_code_inject__end(self, **kwargs):
+    def test_client_model(self, body, **kwargs):
         """
-        To test code injection */ =end
+        To test \"client\" model
         
 
         This method makes a synchronous HTTP request by default. To make an
@@ -62,25 +62,25 @@ class FakeApi(object):
         >>> def callback_function(response):
         >>>     pprint(response)
         >>>
-        >>> thread = api.test_code_inject__end(callback=callback_function)
+        >>> thread = api.test_client_model(body, callback=callback_function)
 
         :param callback function: The callback function
             for asynchronous request. (optional)
-        :param str test_code_inject__end: To test code injection */ =end
-        :return: None
+        :param Client body: client model (required)
+        :return: Client
                  If the method is called asynchronously,
                  returns the request thread.
         """
         kwargs['_return_http_data_only'] = True
         if kwargs.get('callback'):
-            return self.test_code_inject__end_with_http_info(**kwargs)
+            return self.test_client_model_with_http_info(body, **kwargs)
         else:
-            (data) = self.test_code_inject__end_with_http_info(**kwargs)
+            (data) = self.test_client_model_with_http_info(body, **kwargs)
             return data
 
-    def test_code_inject__end_with_http_info(self, **kwargs):
+    def test_client_model_with_http_info(self, body, **kwargs):
         """
-        To test code injection */ =end
+        To test \"client\" model
         
 
         This method makes a synchronous HTTP request by default. To make an
@@ -89,17 +89,17 @@ class FakeApi(object):
         >>> def callback_function(response):
         >>>     pprint(response)
         >>>
-        >>> thread = api.test_code_inject__end_with_http_info(callback=callback_function)
+        >>> thread = api.test_client_model_with_http_info(body, callback=callback_function)
 
         :param callback function: The callback function
             for asynchronous request. (optional)
-        :param str test_code_inject__end: To test code injection */ =end
-        :return: None
+        :param Client body: client model (required)
+        :return: Client
                  If the method is called asynchronously,
                  returns the request thread.
         """
 
-        all_params = ['test_code_inject__end']
+        all_params = ['body']
         all_params.append('callback')
         all_params.append('_return_http_data_only')
 
@@ -108,10 +108,13 @@ class FakeApi(object):
             if key not in all_params:
                 raise TypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method test_code_inject__end" % key
+                    " to method test_client_model" % key
                 )
             params[key] = val
         del params['kwargs']
+        # verify the required parameter 'body' is set
+        if ('body' not in params) or (params['body'] is None):
+            raise ValueError("Missing the required parameter `body` when calling `test_client_model`")
 
         resource_path = '/fake'.replace('{format}', 'json')
         path_params = {}
@@ -122,32 +125,32 @@ class FakeApi(object):
 
         form_params = []
         local_var_files = {}
-        if 'test_code_inject__end' in params:
-            form_params.append(('test code inject */ &#x3D;end', params['test_code_inject__end']))
 
         body_params = None
+        if 'body' in params:
+            body_params = params['body']
 
         # HTTP header `Accept`
         header_params['Accept'] = self.api_client.\
-            select_header_accept(['application/json', '*/ end'])
+            select_header_accept(['application/json'])
         if not header_params['Accept']:
             del header_params['Accept']
 
         # HTTP header `Content-Type`
         header_params['Content-Type'] = self.api_client.\
-            select_header_content_type(['application/json', '*/ =end));(phpinfo('])
+            select_header_content_type(['application/json'])
 
         # Authentication setting
         auth_settings = []
 
-        return self.api_client.call_api(resource_path, 'PUT',
+        return self.api_client.call_api(resource_path, 'PATCH',
                                             path_params,
                                             query_params,
                                             header_params,
                                             body=body_params,
                                             post_params=form_params,
                                             files=local_var_files,
-                                            response_type=None,
+                                            response_type='Client',
                                             auth_settings=auth_settings,
                                             callback=params.get('callback'),
                                             _return_http_data_only=params.get('_return_http_data_only'))

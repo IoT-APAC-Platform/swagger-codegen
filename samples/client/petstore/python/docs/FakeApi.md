@@ -4,15 +4,15 @@ All URIs are relative to *http://petstore.swagger.io/v2*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**test_code_inject__end**](FakeApi.md#test_code_inject__end) | **PUT** /fake | To test code injection */ &#x3D;end
+[**test_client_model**](FakeApi.md#test_client_model) | **PATCH** /fake | To test \&quot;client\&quot; model
 [**test_endpoint_parameters**](FakeApi.md#test_endpoint_parameters) | **POST** /fake | Fake endpoint for testing various parameters 假端點 偽のエンドポイント 가짜 엔드 포인트 
 [**test_enum_query_parameters**](FakeApi.md#test_enum_query_parameters) | **GET** /fake | To test enum query parameters
 
 
-# **test_code_inject__end**
-> test_code_inject__end(test_code_inject__end=test_code_inject__end)
+# **test_client_model**
+> Client test_client_model(body)
 
-To test code injection */ =end
+To test \"client\" model
 
 ### Example 
 ```python
@@ -23,24 +23,25 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = petstore_api.FakeApi()
-test_code_inject__end = 'test_code_inject__end_example' # str | To test code injection */ =end (optional)
+body = petstore_api.Client() # Client | client model
 
 try: 
-    # To test code injection */ =end
-    api_instance.test_code_inject__end(test_code_inject__end=test_code_inject__end)
+    # To test \"client\" model
+    api_response = api_instance.test_client_model(body)
+    pprint(api_response)
 except ApiException as e:
-    print "Exception when calling FakeApi->test_code_inject__end: %s\n" % e
+    print "Exception when calling FakeApi->test_client_model: %s\n" % e
 ```
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **test_code_inject__end** | **str**| To test code injection */ &#x3D;end | [optional] 
+ **body** | [**Client**](Client.md)| client model | 
 
 ### Return type
 
-void (empty response body)
+[**Client**](Client.md)
 
 ### Authorization
 
@@ -48,8 +49,8 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json, */ =end));(phpinfo(
- - **Accept**: application/json, */ end
+ - **Content-Type**: application/json
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

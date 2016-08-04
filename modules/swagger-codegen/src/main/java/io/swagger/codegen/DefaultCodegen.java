@@ -106,7 +106,7 @@ public class DefaultCodegen {
     // How to encode special characters like $
     // They are translated to words like "Dollar" and prefixed with '
     // Then translated back during JSON encoding and decoding
-    protected Map<Character, String> specialCharReplacements = new HashMap<Character, String>();
+    protected Map<String, String> specialCharReplacements = new HashMap<String, String>();
 
     public List<CliOption> cliOptions() {
         return cliOptions;
@@ -789,21 +789,35 @@ public class DefaultCodegen {
      */
     protected void initalizeSpecialCharacterMapping() {
         // Initialize special characters
-        specialCharReplacements.put('$', "Dollar");
-        specialCharReplacements.put('^', "Caret");
-        specialCharReplacements.put('|', "Pipe");
-        specialCharReplacements.put('=', "Equal");
-        specialCharReplacements.put('*', "Star");
-        specialCharReplacements.put('-', "Minus");
-        specialCharReplacements.put('&', "Ampersand");
-        specialCharReplacements.put('%', "Percent");
-        specialCharReplacements.put('#', "Hash");
-        specialCharReplacements.put('@', "At");
-        specialCharReplacements.put('!', "Exclamation");
-        specialCharReplacements.put('+', "Plus");
-        specialCharReplacements.put(':', "Colon");
-        specialCharReplacements.put('>', "GreaterThan");
-        specialCharReplacements.put('<', "LessThan");
+        specialCharReplacements.put("$", "Dollar");
+        specialCharReplacements.put("^", "Caret");
+        specialCharReplacements.put("|", "Pipe");
+        specialCharReplacements.put("=", "Equal");
+        specialCharReplacements.put("*", "Star");
+        specialCharReplacements.put("-", "Minus");
+        specialCharReplacements.put("&", "Ampersand");
+        specialCharReplacements.put("%", "Percent");
+        specialCharReplacements.put("#", "Hash");
+        specialCharReplacements.put("@", "At");
+        specialCharReplacements.put("!", "Exclamation");
+        specialCharReplacements.put("+", "Plus");
+        specialCharReplacements.put(":", "Colon");
+        specialCharReplacements.put(">", "Greater_Than");
+        specialCharReplacements.put("<", "Less_Than");
+
+        specialCharReplacements.put("<=", "Less_Than_Or_Equal_To");
+        specialCharReplacements.put(">=", "Greater_Than_Or_Equal_To");
+        specialCharReplacements.put("!=", "Greater_Than_Or_Equal_To");
+    }
+
+    /**
+     * Return the symbol name of a symbol
+     *
+     * @param input Symbol (e.g. $)
+     * @return Symbol name (e.g. Dollar)
+     */
+    protected String getSymbolName(String input) {
+        return specialCharReplacements.get(input);
     }
 
     /**
@@ -1195,7 +1209,35 @@ public class DefaultCodegen {
                 allRequired = null;
             }
             // parent model
-            final RefModel parent = (RefModel) composed.getParent();
+            RefModel parent = (RefModel) composed.getParent();
+
+            // interfaces (intermediate models)
+            if (composed.getInterfaces() != null) {
+                if (m.interfaces == null)
+                    m.interfaces = new ArrayList<String>();
+                for (RefModel _interface : composed.getInterfaces()) {
+                    Model interfaceModel = null;
+                    if (allDefinitions != null) {
+                        interfaceModel = allDefinitions.get(_interface.getSimpleRef());
+                    }
+                    // set first interface with discriminator found as parent
+                    if (parent == null && interfaceModel instanceof ModelImpl && ((ModelImpl) interfaceModel).getDiscriminator() != null) {
+                        parent = _interface;
+                    } else {
+                        final String interfaceRef = toModelName(_interface.getSimpleRef());
+                        m.interfaces.add(interfaceRef);
+                        addImport(m, interfaceRef);
+                        if (allDefinitions != null) {
+                            if (supportsInheritance) {
+                                addProperties(allProperties, allRequired, interfaceModel, allDefinitions);
+                            } else {
+                                addProperties(properties, required, interfaceModel, allDefinitions);
+                            }
+                        }
+                    }
+                }
+            }
+
             if (parent != null) {
                 final String parentRef = parent.getSimpleRef();
                 m.parentSchema = parentRef;
@@ -1210,24 +1252,7 @@ public class DefaultCodegen {
                     }
                 }
             }
-            // interfaces (intermediate models)
-            if (composed.getInterfaces() != null) {
-                if (m.interfaces == null)
-                    m.interfaces = new ArrayList<String>();
-                for (RefModel _interface : composed.getInterfaces()) {
-                    final String interfaceRef = toModelName(_interface.getSimpleRef());
-                    m.interfaces.add(interfaceRef);
-                    addImport(m, interfaceRef);
-                    if (allDefinitions != null) {
-                        final Model interfaceModel = allDefinitions.get(_interface.getSimpleRef());
-                        if (supportsInheritance) {
-                            addProperties(allProperties, allRequired, interfaceModel, allDefinitions);
-                        } else {
-                            addProperties(properties, required, interfaceModel, allDefinitions);
-                        }
-                    }
-                }
-            }
+
             // child model (properties owned by the model itself)
             Model child = composed.getChild();
             if (child != null && child instanceof RefModel && allDefinitions != null) {
@@ -1323,7 +1348,7 @@ public class DefaultCodegen {
 
         property.name = toVarName(name);
         property.baseName = name;
-        property.nameInCamelCase = camelize(name, false);
+        property.nameInCamelCase = camelize(property.name, false);
         property.description = escapeText(p.getDescription());
         property.unescapedDescription = p.getDescription();
         property.getter = "get" + getterAndSetterCapitalize(name);
@@ -1548,6 +1573,7 @@ public class DefaultCodegen {
         // this can cause issues for clients which don't support enums
         if (property.isEnum) {
             property.datatypeWithEnum = toEnumName(property);
+            property.enumName = toEnumName(property);
         } else {
             property.datatypeWithEnum = property.datatype;
         }
@@ -1595,11 +1621,14 @@ public class DefaultCodegen {
             property.items = innerProperty;
             // inner item is Enum
             if (isPropertyInnerMostEnum(property)) {
+                // isEnum is set to true when the type is an enum
+                // or the inner type of an array/map is an enum
                 property.isEnum = true;
                 // update datatypeWithEnum and default value for array
                 // e.g. List<string> => List<StatusEnum>
                 updateDataTypeWithEnumForArray(property);
-
+                // set allowable values to enum values (including array/map of enum)
+                property.allowableValues = getInnerEnumAllowableValues(property);
             }
         }
     }
@@ -1622,10 +1651,14 @@ public class DefaultCodegen {
             property.items = innerProperty;
             // inner item is Enum
             if (isPropertyInnerMostEnum(property)) {
+                // isEnum is set to true when the type is an enum
+                // or the inner type of an array/map is an enum
                 property.isEnum = true;
                 // update datatypeWithEnum and default value for map
                 // e.g. Dictionary<string, string> => Dictionary<string, StatusEnum>
                 updateDataTypeWithEnumForMap(property);
+                // set allowable values to enum values (including array/map of enum)
+                property.allowableValues = getInnerEnumAllowableValues(property);
             }
         }
 
@@ -1646,6 +1679,17 @@ public class DefaultCodegen {
         return currentProperty.isEnum;
     }
 
+    protected Map<String, Object> getInnerEnumAllowableValues(CodegenProperty property) {
+        CodegenProperty currentProperty = property;
+        while (currentProperty != null && (Boolean.TRUE.equals(currentProperty.isMapContainer)
+                    || Boolean.TRUE.equals(currentProperty.isListContainer))) {
+            currentProperty = currentProperty.items;
+        }
+
+        return currentProperty.allowableValues;
+    }
+
+
     /**
      * Update datatypeWithEnum for array container
      * @param property Codegen property
@@ -1659,9 +1703,13 @@ public class DefaultCodegen {
         // set both datatype and datetypeWithEnum as only the inner type is enum
         property.datatypeWithEnum = property.datatypeWithEnum.replace(baseItem.baseType, toEnumName(baseItem));
 
+        // naming the enum with respect to the language enum naming convention
+        // e.g. remove [], {} from array/map of enum
+        property.enumName = toEnumName(property);
+
         // set default value for variable with inner enum
         if (property.defaultValue != null) {
-            property.defaultValue = property.defaultValue.replace(property.items.baseType, toEnumName(property.items));
+            property.defaultValue = property.defaultValue.replace(baseItem.baseType, toEnumName(baseItem));
         }
     }
 
@@ -1677,6 +1725,10 @@ public class DefaultCodegen {
         }
         // set both datatype and datetypeWithEnum as only the inner type is enum
         property.datatypeWithEnum = property.datatypeWithEnum.replace(", " + baseItem.baseType, ", " + toEnumName(baseItem));
+
+        // naming the enum with respect to the language enum naming convention
+        // e.g. remove [], {} from array/map of enum
+        property.enumName = toEnumName(property);
 
         // set default value for variable with inner enum
         if (property.defaultValue != null) {
@@ -1774,7 +1826,7 @@ public class DefaultCodegen {
             for (String key : consumes) {
                 Map<String, String> mediaType = new HashMap<String, String>();
                 // escape quotation to avoid code injection
-                mediaType.put("mediaType", escapeQuotationMark(key));
+                mediaType.put("mediaType", escapeText(escapeQuotationMark(key)));
                 count += 1;
                 if (count < consumes.size()) {
                     mediaType.put("hasMore", "true");
@@ -1808,7 +1860,7 @@ public class DefaultCodegen {
             for (String key : produces) {
                 Map<String, String> mediaType = new HashMap<String, String>();
                 // escape quotation to avoid code injection
-                mediaType.put("mediaType", escapeQuotationMark(key));
+                mediaType.put("mediaType", escapeText(escapeQuotationMark(key)));
                 count += 1;
                 if (count < produces.size()) {
                     mediaType.put("hasMore", "true");
@@ -2351,6 +2403,7 @@ public class DefaultCodegen {
             CodegenSecurity sec = CodegenModelFactory.newInstance(CodegenModelType.SECURITY);
             sec.name = entry.getKey();
             sec.type = schemeDefinition.getType();
+            sec.isCode = sec.isPassword = sec.isApplication = sec.isImplicit = false;
 
             if (schemeDefinition instanceof ApiKeyAuthDefinition) {
                 final ApiKeyAuthDefinition apiKeyDefinition = (ApiKeyAuthDefinition) schemeDefinition;
@@ -2367,6 +2420,22 @@ public class DefaultCodegen {
             	sec.isKeyInHeader = sec.isKeyInQuery = sec.isApiKey = sec.isBasic = false;
                 sec.isOAuth = true;
                 sec.flow = oauth2Definition.getFlow();
+                switch(sec.flow) {
+                    case "accessCode":
+                        sec.isCode = true;
+                        break;
+                    case "password":
+                        sec.isPassword = true;
+                        break;
+                    case "application":
+                        sec.isApplication = true;
+                        break;
+                    case "implicit":
+                        sec.isImplicit = true;
+                        break;
+                    default:
+                        throw new RuntimeException("unknown oauth flow: " + sec.flow);
+                }
                 sec.authorizationUrl = oauth2Definition.getAuthorizationUrl();
                 sec.tokenUrl = oauth2Definition.getTokenUrl();
                 if (oauth2Definition.getScopes() != null) {

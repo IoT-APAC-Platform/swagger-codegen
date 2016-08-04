@@ -31,6 +31,63 @@ module Petstore
       @api_client = api_client
     end
 
+    # To test \"client\" model
+    # 
+    # @param body client model
+    # @param [Hash] opts the optional parameters
+    # @return [Client]
+    def test_client_model(body, opts = {})
+      data, _status_code, _headers = test_client_model_with_http_info(body, opts)
+      return data
+    end
+
+    # To test \&quot;client\&quot; model
+    # 
+    # @param body client model
+    # @param [Hash] opts the optional parameters
+    # @return [Array<(Client, Fixnum, Hash)>] Client data, response status code and response headers
+    def test_client_model_with_http_info(body, opts = {})
+      if @api_client.config.debugging
+        @api_client.config.logger.debug "Calling API: FakeApi.test_client_model ..."
+      end
+      # verify the required parameter 'body' is set
+      fail ArgumentError, "Missing the required parameter 'body' when calling FakeApi.test_client_model" if body.nil?
+      # resource path
+      local_var_path = "/fake".sub('{format}','json')
+
+      # query parameters
+      query_params = {}
+
+      # header parameters
+      header_params = {}
+
+      # HTTP header 'Accept' (if needed)
+      local_header_accept = ['application/json']
+      local_header_accept_result = @api_client.select_header_accept(local_header_accept) and header_params['Accept'] = local_header_accept_result
+
+      # HTTP header 'Content-Type'
+      local_header_content_type = ['application/json']
+      header_params['Content-Type'] = @api_client.select_header_content_type(local_header_content_type)
+
+      # form parameters
+      form_params = {}
+
+      # http body (model)
+      post_body = @api_client.object_to_http_body(body)
+      auth_names = []
+      data, status_code, headers = @api_client.call_api(:PATCH, local_var_path,
+        :header_params => header_params,
+        :query_params => query_params,
+        :form_params => form_params,
+        :body => post_body,
+        :auth_names => auth_names,
+        :return_type => 'Client')
+      if @api_client.config.debugging
+        @api_client.config.logger.debug "API called: FakeApi#test_client_model\nData: #{data.inspect}\nStatus code: #{status_code}\nHeaders: #{headers}"
+      end
+      return data, status_code, headers
+    end
+
     # Fake endpoint for testing various parameters 假端點 偽のエンドポイント 가짜 엔드 포인트 
     # Fake endpoint for testing various parameters 假端點 偽のエンドポイント 가짜 엔드 포인트 
     # @param number None
@@ -100,31 +157,31 @@ module Petstore
 
       # verify the required parameter 'byte' is set
       fail ArgumentError, "Missing the required parameter 'byte' when calling FakeApi.test_endpoint_parameters" if byte.nil?
-      if opts[:'integer'] > 100.0
+      if !opts[:'integer'].nil? && opts[:'integer'] > 100.0
         fail ArgumentError, 'invalid value for "opts[:"integer"]" when calling FakeApi.test_endpoint_parameters, must be smaller than or equal to 100.0.'
       end
 
-      if opts[:'integer'] < 10.0
+      if !opts[:'integer'].nil? && opts[:'integer'] < 10.0
         fail ArgumentError, 'invalid value for "opts[:"integer"]" when calling FakeApi.test_endpoint_parameters, must be greater than or equal to 10.0.'
       end
 
-      if opts[:'int32'] > 200.0
+      if !opts[:'int32'].nil? && opts[:'int32'] > 200.0
         fail ArgumentError, 'invalid value for "opts[:"int32"]" when calling FakeApi.test_endpoint_parameters, must be smaller than or equal to 200.0.'
       end
 
-      if opts[:'int32'] < 20.0
+      if !opts[:'int32'].nil? && opts[:'int32'] < 20.0
         fail ArgumentError, 'invalid value for "opts[:"int32"]" when calling FakeApi.test_endpoint_parameters, must be greater than or equal to 20.0.'
       end
 
-      if opts[:'float'] > 987.6
+      if !opts[:'float'].nil? && opts[:'float'] > 987.6
         fail ArgumentError, 'invalid value for "opts[:"float"]" when calling FakeApi.test_endpoint_parameters, must be smaller than or equal to 987.6.'
       end
 
-      if opts[:'password'].to_s.length > 64
+      if !opts[:'password'].nil? && opts[:'password'].to_s.length > 64
         fail ArgumentError, 'invalid value for "opts[:"password"]" when calling FakeApi.test_endpoint_parameters, the character length must be smaller than or equal to 64.'
       end
 
-      if opts[:'password'].to_s.length < 10
+      if !opts[:'password'].nil? && opts[:'password'].to_s.length < 10
         fail ArgumentError, 'invalid value for "opts[:"password"]" when calling FakeApi.test_endpoint_parameters, the character length must be great than or equal to 10.'
       end
 

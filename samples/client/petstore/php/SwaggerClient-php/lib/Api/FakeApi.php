@@ -103,51 +103,56 @@ class FakeApi
     }
 
     /**
-     * Operation testCodeInjectEnd
+     * Operation testClientModel
      *
-     * To test code injection  =end
+     * To test \"client\" model
      *
-     * @param string $test_code_inject__end To test code injection  &#x3D;end (optional)
-     * @return void
+     * @param \Swagger\Client\Model\Client $body client model (required)
+     * @return \Swagger\Client\Model\Client
      * @throws \Swagger\Client\ApiException on non-2xx response
      */
-    public function testCodeInjectEnd($test_code_inject__end = null)
+    public function testClientModel($body)
     {
-        list($response) = $this->testCodeInjectEndWithHttpInfo($test_code_inject__end);
+        list($response) = $this->testClientModelWithHttpInfo($body);
         return $response;
     }
 
     /**
-     * Operation testCodeInjectEndWithHttpInfo
+     * Operation testClientModelWithHttpInfo
      *
-     * To test code injection  =end
+     * To test \"client\" model
      *
-     * @param string $test_code_inject__end To test code injection  &#x3D;end (optional)
-     * @return Array of null, HTTP status code, HTTP response headers (array of strings)
+     * @param \Swagger\Client\Model\Client $body client model (required)
+     * @return Array of \Swagger\Client\Model\Client, HTTP status code, HTTP response headers (array of strings)
      * @throws \Swagger\Client\ApiException on non-2xx response
      */
-    public function testCodeInjectEndWithHttpInfo($test_code_inject__end = null)
+    public function testClientModelWithHttpInfo($body)
     {
+        // verify the required parameter 'body' is set
+        if ($body === null) {
+            throw new \InvalidArgumentException('Missing the required parameter $body when calling testClientModel');
+        }
         // parse inputs
         $resourcePath = "/fake";
         $httpBody = '';
         $queryParams = array();
         $headerParams = array();
         $formParams = array();
-        $_header_accept = $this->apiClient->selectHeaderAccept(array('application/json', '*/ end'));
+        $_header_accept = $this->apiClient->selectHeaderAccept(array('application/json'));
         if (!is_null($_header_accept)) {
             $headerParams['Accept'] = $_header_accept;
         }
-        $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(array('application/json','*/ =end));(phpinfo('));
+        $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(array('application/json'));
 
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        // form params
-        if ($test_code_inject__end !== null) {
-            $formParams['test code inject */ &#x3D;end'] = $this->apiClient->getSerializer()->toFormValue($test_code_inject__end);
+        // body params
+        $_tempBody = null;
+        if (isset($body)) {
+            $_tempBody = $body;
         }
-        
+
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
@@ -158,17 +163,21 @@ class FakeApi
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
                 $resourcePath,
-                'PUT',
+                'PATCH',
                 $queryParams,
                 $httpBody,
                 $headerParams,
-                null,
+                '\Swagger\Client\Model\Client',
                 '/fake'
             );
 
-            return array(null, $statusCode, $httpHeader);
+            return array($this->apiClient->getSerializer()->deserialize($response, '\Swagger\Client\Model\Client', $httpHeader), $statusCode, $httpHeader);
         } catch (ApiException $e) {
             switch ($e->getCode()) {
+                case 200:
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Swagger\Client\Model\Client', $e->getResponseHeaders());
+                    $e->setResponseObject($data);
+                    break;
             }
 
             throw $e;
@@ -227,10 +236,10 @@ class FakeApi
         if ($number === null) {
             throw new \InvalidArgumentException('Missing the required parameter $number when calling testEndpointParameters');
         }
-        if ($number > 543.2) {
+        if (($number > 543.2)) {
             throw new \InvalidArgumentException('invalid value for "$number" when calling FakeApi.testEndpointParameters, must be smaller than or equal to 543.2.');
         }
-        if ($number < 32.1) {
+        if (($number < 32.1)) {
             throw new \InvalidArgumentException('invalid value for "$number" when calling FakeApi.testEndpointParameters, must be bigger than or equal to 32.1.');
         }
 
@@ -238,10 +247,10 @@ class FakeApi
         if ($double === null) {
             throw new \InvalidArgumentException('Missing the required parameter $double when calling testEndpointParameters');
         }
-        if ($double > 123.4) {
+        if (($double > 123.4)) {
             throw new \InvalidArgumentException('invalid value for "$double" when calling FakeApi.testEndpointParameters, must be smaller than or equal to 123.4.');
         }
-        if ($double < 67.8) {
+        if (($double < 67.8)) {
             throw new \InvalidArgumentException('invalid value for "$double" when calling FakeApi.testEndpointParameters, must be bigger than or equal to 67.8.');
         }
 
@@ -257,28 +266,28 @@ class FakeApi
         if ($byte === null) {
             throw new \InvalidArgumentException('Missing the required parameter $byte when calling testEndpointParameters');
         }
-        if ($integer > 100.0) {
+        if (!is_null($integer) && ($integer > 100.0)) {
             throw new \InvalidArgumentException('invalid value for "$integer" when calling FakeApi.testEndpointParameters, must be smaller than or equal to 100.0.');
         }
-        if ($integer < 10.0) {
+        if (!is_null($integer) && ($integer < 10.0)) {
             throw new \InvalidArgumentException('invalid value for "$integer" when calling FakeApi.testEndpointParameters, must be bigger than or equal to 10.0.');
         }
 
-        if ($int32 > 200.0) {
+        if (!is_null($int32) && ($int32 > 200.0)) {
             throw new \InvalidArgumentException('invalid value for "$int32" when calling FakeApi.testEndpointParameters, must be smaller than or equal to 200.0.');
         }
-        if ($int32 < 20.0) {
+        if (!is_null($int32) && ($int32 < 20.0)) {
             throw new \InvalidArgumentException('invalid value for "$int32" when calling FakeApi.testEndpointParameters, must be bigger than or equal to 20.0.');
         }
 
-        if ($float > 987.6) {
+        if (!is_null($float) && ($float > 987.6)) {
             throw new \InvalidArgumentException('invalid value for "$float" when calling FakeApi.testEndpointParameters, must be smaller than or equal to 987.6.');
         }
 
-        if (strlen($password) > 64) {
+        if (!is_null($password) && (strlen($password) > 64)) {
             throw new \InvalidArgumentException('invalid length for "$password" when calling FakeApi.testEndpointParameters, must be smaller than or equal to 64.');
         }
-        if (strlen($password) < 10) {
+        if (!is_null($password) && (strlen($password) < 10)) {
             throw new \InvalidArgumentException('invalid length for "$password" when calling FakeApi.testEndpointParameters, must be bigger than or equal to 10.');
         }
 

@@ -4,15 +4,15 @@ All URIs are relative to *http://petstore.swagger.io/v2*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**testCodeInjectEnd**](FakeApi.md#testCodeInjectEnd) | **PUT** /fake | To test code injection  &#x3D;end
+[**testClientModel**](FakeApi.md#testClientModel) | **PATCH** /fake | To test \&quot;client\&quot; model
 [**testEndpointParameters**](FakeApi.md#testEndpointParameters) | **POST** /fake | Fake endpoint for testing various parameters 假端點 偽のエンドポイント 가짜 엔드 포인트
 [**testEnumQueryParameters**](FakeApi.md#testEnumQueryParameters) | **GET** /fake | To test enum query parameters
 
 
-# **testCodeInjectEnd**
-> testCodeInjectEnd($test_code_inject__end)
+# **testClientModel**
+> \Swagger\Client\Model\Client testClientModel($body)
 
-To test code injection  =end
+To test \"client\" model
 
 ### Example
 ```php
@@ -20,12 +20,13 @@ To test code injection  =end
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\Api\FakeApi();
-$test_code_inject__end = "test_code_inject__end_example"; // string | To test code injection  =end
+$body = new \Swagger\Client\Model\Client(); // \Swagger\Client\Model\Client | client model
 
 try {
-    $api_instance->testCodeInjectEnd($test_code_inject__end);
+    $result = $api_instance->testClientModel($body);
+    print_r($result);
 } catch (Exception $e) {
-    echo 'Exception when calling FakeApi->testCodeInjectEnd: ', $e->getMessage(), PHP_EOL;
+    echo 'Exception when calling FakeApi->testClientModel: ', $e->getMessage(), PHP_EOL;
 }
 ?>
 ```
@@ -34,11 +35,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **test_code_inject__end** | **string**| To test code injection  &#x3D;end | [optional]
+ **body** | [**\Swagger\Client\Model\Client**](../Model/\Swagger\Client\Model\Client.md)| client model |
 
 ### Return type
 
-void (empty response body)
+[**\Swagger\Client\Model\Client**](../Model/Client.md)
 
 ### Authorization
 
@@ -46,8 +47,8 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json, */ =end));(phpinfo(
- - **Accept**: application/json, */ end
+ - **Content-Type**: application/json
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 

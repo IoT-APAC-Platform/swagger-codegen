@@ -26,6 +26,11 @@ public abstract class AbstractTypeScriptClientCodegen extends DefaultCodegen imp
 
     public AbstractTypeScriptClientCodegen() {
         super();
+
+        // clear import mapping (from default generator) as TS does not use it
+        // at the moment
+        importMapping.clear();
+
         supportsInheritance = true;
         setReservedWordsLowerCase(Arrays.asList(
                 // local variable names used in API methods (endpoints)
@@ -276,9 +281,13 @@ public abstract class AbstractTypeScriptClientCodegen extends DefaultCodegen imp
         }
 
         // string
-        String enumName = sanitizeName(underscore(name).toUpperCase());
+        String enumName = sanitizeName(name);
         enumName = enumName.replaceFirst("^_", "");
         enumName = enumName.replaceFirst("_$", "");
+
+        // camelize the enum variable name
+        // ref: https://basarat.gitbooks.io/typescript/content/docs/enums.html
+        enumName = camelize(enumName);
 
         if (enumName.matches("\\d.*")) { // starts with number
             return "_" + enumName;
