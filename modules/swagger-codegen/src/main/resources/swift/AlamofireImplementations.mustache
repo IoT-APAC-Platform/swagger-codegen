@@ -120,7 +120,12 @@ class AlamofireRequestBuilder<T>: RequestBuilder<T> {
                 cleanupRequest()
 
                 if response.result.isFailure {
-                    completion(response: nil, error: response.result.error)
+                    guard let data = response.data,
+                        errorString = String(data: data, encoding: NSUTF8StringEncoding) else {
+                            completion(response: nil, error: response.result.error)
+                            return
+                    }
+                    completion(response: nil, error: NSError(domain: "localhost", code: 403, userInfo: [NSLocalizedDescriptionKey: errorString]))
                     return
                 }
 
