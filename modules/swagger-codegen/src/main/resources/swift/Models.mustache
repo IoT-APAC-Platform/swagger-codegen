@@ -82,6 +82,11 @@ class Decoders {
             return NSUUID(UUIDString: source as! String) as! T
         }
 
+        if T.self is Bool.Type && source is String {
+            let boolValue = ((source as! String).lowercaseString == "true") ? true : false
+            return boolValue as! T
+        }
+
         if source is T {
                return source as! T
         }

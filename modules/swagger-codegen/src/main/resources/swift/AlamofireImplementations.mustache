@@ -75,6 +75,7 @@ class AlamofireRequestBuilder<T>: RequestBuilder<T> {
             )
         } else {
             let request = manager.request(xMethod!, URLString, parameters: parameters, encoding: encoding)
+            _ = request.request?.HTTPBody
             if let onProgressReady = self.onProgressReady {
                 onProgressReady(request.progress)
             }
