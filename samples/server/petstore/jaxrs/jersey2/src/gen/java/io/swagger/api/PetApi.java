@@ -7,9 +7,9 @@ import io.swagger.api.factories.PetApiServiceFactory;
 import io.swagger.annotations.ApiParam;
 import io.swagger.jaxrs.*;
 
-import io.swagger.model.Pet;
 import java.io.File;
 import io.swagger.model.ModelApiResponse;
+import io.swagger.model.Pet;
 
 import java.util.List;
 import io.swagger.api.NotFoundException;
@@ -19,10 +19,12 @@ import java.io.InputStream;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
+import javax.servlet.ServletConfig;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.*;
+import javax.validation.constraints.*;
 
 @Path("/pet")
 
@@ -30,7 +32,28 @@ import javax.ws.rs.*;
 @io.swagger.annotations.Api(description = "the pet API")
 
 public class PetApi  {
-   private final PetApiService delegate = PetApiServiceFactory.getPetApi();
+   private final PetApiService delegate;
+
+   public PetApi(@Context ServletConfig servletContext) {
+      PetApiService delegate = null;
+
+      if (servletContext != null) {
+         String implClass = servletContext.getInitParameter("PetApi.implementation");
+         if (implClass != null && !"".equals(implClass.trim())) {
+            try {
+               delegate = (PetApiService) Class.forName(implClass).newInstance();
+            } catch (Exception e) {
+               throw new RuntimeException(e);
+            }
+         } 
+      }
+
+      if (delegate == null) {
+         delegate = PetApiServiceFactory.getPetApi();
+      }
+
+      this.delegate = delegate;
+   }
 
     @POST
     

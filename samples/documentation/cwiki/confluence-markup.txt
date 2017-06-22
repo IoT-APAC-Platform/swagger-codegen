@@ -28,6 +28,7 @@ h2. Endpoints
 
 
 
+
     h4. Responses
         *Status Code:* 405
         *Message:*     Invalid input
@@ -61,6 +62,9 @@ h2. Endpoints
 
 
 
+        h5. Header Parameters
+        ||Name||Description||Required||Default||Pattern||
+        
 
 
 
@@ -98,6 +102,7 @@ h2. Endpoints
         h5. Query Parameters
         ||Name||Description||Required||Default||Pattern||
         |status |Status values that need to be considered for filter |(/) | |  |
+
 
 
 
@@ -159,6 +164,7 @@ array[Pet]
 
 
 
+
     h4. Responses
         *Status Code:* 200
         *Message:*     successful operation
@@ -209,6 +215,7 @@ array[Pet]
         h5. Path Parameters
         ||Name||Description||Required||Default||Pattern||
         |petId |ID of pet to return |(/) | |  |
+
 
 
 
@@ -284,6 +291,7 @@ Pet
 
 
 
+
     h4. Responses
         *Status Code:* 400
         *Message:*     Invalid ID supplied
@@ -349,6 +357,7 @@ Pet
 
 
 
+
     h4. Responses
         *Status Code:* 405
         *Message:*     Invalid input
@@ -379,6 +388,7 @@ Pet
         h5. Path Parameters
         ||Name||Description||Required||Default||Pattern||
         |petId |ID of pet to update |(/) | |  |
+
 
 
 
@@ -419,6 +429,7 @@ ApiResponse
         h5. Path Parameters
         ||Name||Description||Required||Default||Pattern||
         |orderId |ID of the order that needs to be deleted |(/) | |  |
+
 
 
 
@@ -518,6 +529,7 @@ map[String, Integer]
 
 
 
+
     h4. Responses
         *Status Code:* 200
         *Message:*     successful operation
@@ -586,6 +598,7 @@ Order
 
 
 
+
     h4. Responses
         *Status Code:* 200
         *Message:*     successful operation
@@ -640,6 +653,7 @@ Order
 
 
 
+
     h4. Responses
         *Status Code:* 0
         *Message:*     successful operation
@@ -671,6 +685,7 @@ Order
         h5. Body Parameter
         ||Name||Description||Required||Default||Pattern||
         |body |List of user object |(/) | |  |
+
 
 
 
@@ -714,6 +729,7 @@ Order
 
 
 
+
     h4. Responses
         *Status Code:* 0
         *Message:*     successful operation
@@ -744,6 +760,7 @@ Order
         h5. Path Parameters
         ||Name||Description||Required||Default||Pattern||
         |username |The name that needs to be deleted |(/) | |  |
+
 
 
 
@@ -795,6 +812,7 @@ Order
         h5. Path Parameters
         ||Name||Description||Required||Default||Pattern||
         |username |The name that needs to be fetched. Use user1 for testing.  |(/) | |  |
+
 
 
 
@@ -866,7 +884,9 @@ User
         h5. Query Parameters
         ||Name||Description||Required||Default||Pattern||
         |username |The user name for login |(/) | |  |
+
 |password |The password for login in clear text |(/) | |  |
+
 
 
 
@@ -965,9 +985,11 @@ String
         ||Name||Description||Required||Default||Pattern||
         |username |name that need to be deleted |(/) | |  |
 
+
         h5. Body Parameter
         ||Name||Description||Required||Default||Pattern||
         |body |Updated user object |(/) | |  |
+
 
 
 

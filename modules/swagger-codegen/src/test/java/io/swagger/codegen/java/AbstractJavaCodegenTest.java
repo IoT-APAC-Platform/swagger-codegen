@@ -27,9 +27,26 @@ public class AbstractJavaCodegenTest {
 
     @Test
     public void toEnumVarNameShouldNotShortenUnderScore() throws Exception {
-        Assert.assertEquals("_", fakeJavaCodegen.toEnumVarName("_", "String"));
+        Assert.assertEquals("UNDERSCORE", fakeJavaCodegen.toEnumVarName("_", "String"));
         Assert.assertEquals("__", fakeJavaCodegen.toEnumVarName("__", "String"));
         Assert.assertEquals("__", fakeJavaCodegen.toEnumVarName("_,.", "String"));
     }
 
+    @Test
+    public void toVarNameShouldAvoidOverloadingGetClassMethod() throws Exception {
+        Assert.assertEquals("propertyClass", fakeJavaCodegen.toVarName("class"));
+        Assert.assertEquals("propertyClass", fakeJavaCodegen.toVarName("_class"));
+        Assert.assertEquals("propertyClass", fakeJavaCodegen.toVarName("__class"));
+    }
+
+    @Test
+    public void toModelNameShouldUseProvidedMapping() throws Exception {
+        fakeJavaCodegen.importMapping().put("json_myclass", "com.test.MyClass");
+        Assert.assertEquals("com.test.MyClass", fakeJavaCodegen.toModelName("json_myclass"));
+    }
+
+    @Test
+    public void toModelNameUsesPascalCase() throws Exception {
+        Assert.assertEquals("JsonAnotherclass", fakeJavaCodegen.toModelName("json_anotherclass"));
+    }
 }

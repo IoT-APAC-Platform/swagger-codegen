@@ -2,21 +2,25 @@ package io.swagger.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
-
-
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 /**
- * ModelApiResponse
+ * Describes the result of uploading an image resource
  */
+@ApiModel(description = "Describes the result of uploading an image resource")
 
 public class ModelApiResponse   {
+  @JsonProperty("code")
   private Integer code = null;
 
+  @JsonProperty("type")
   private String type = null;
 
+  @JsonProperty("message")
   private String message = null;
 
   public ModelApiResponse code(Integer code) {
@@ -29,6 +33,8 @@ public class ModelApiResponse   {
    * @return code
   **/
   @ApiModelProperty(value = "")
+
+
   public Integer getCode() {
     return code;
   }
@@ -47,6 +53,8 @@ public class ModelApiResponse   {
    * @return type
   **/
   @ApiModelProperty(value = "")
+
+
   public String getType() {
     return type;
   }
@@ -65,6 +73,8 @@ public class ModelApiResponse   {
    * @return message
   **/
   @ApiModelProperty(value = "")
+
+
   public String getMessage() {
     return message;
   }

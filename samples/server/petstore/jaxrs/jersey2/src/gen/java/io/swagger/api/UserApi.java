@@ -7,8 +7,8 @@ import io.swagger.api.factories.UserApiServiceFactory;
 import io.swagger.annotations.ApiParam;
 import io.swagger.jaxrs.*;
 
-import io.swagger.model.User;
 import java.util.List;
+import io.swagger.model.User;
 
 import java.util.List;
 import io.swagger.api.NotFoundException;
@@ -18,10 +18,12 @@ import java.io.InputStream;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
+import javax.servlet.ServletConfig;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.*;
+import javax.validation.constraints.*;
 
 @Path("/user")
 
@@ -29,7 +31,28 @@ import javax.ws.rs.*;
 @io.swagger.annotations.Api(description = "the user API")
 
 public class UserApi  {
-   private final UserApiService delegate = UserApiServiceFactory.getUserApi();
+   private final UserApiService delegate;
+
+   public UserApi(@Context ServletConfig servletContext) {
+      UserApiService delegate = null;
+
+      if (servletContext != null) {
+         String implClass = servletContext.getInitParameter("UserApi.implementation");
+         if (implClass != null && !"".equals(implClass.trim())) {
+            try {
+               delegate = (UserApiService) Class.forName(implClass).newInstance();
+            } catch (Exception e) {
+               throw new RuntimeException(e);
+            }
+         } 
+      }
+
+      if (delegate == null) {
+         delegate = UserApiServiceFactory.getUserApi();
+      }
+
+      this.delegate = delegate;
+   }
 
     @POST
     

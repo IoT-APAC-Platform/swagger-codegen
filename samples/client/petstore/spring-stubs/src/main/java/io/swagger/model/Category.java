@@ -2,19 +2,22 @@ package io.swagger.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
-
-
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 /**
- * Category
+ * A category for a pet
  */
+@ApiModel(description = "A category for a pet")
 
 public class Category   {
+  @JsonProperty("id")
   private Long id = null;
 
+  @JsonProperty("name")
   private String name = null;
 
   public Category id(Long id) {
@@ -27,6 +30,8 @@ public class Category   {
    * @return id
   **/
   @ApiModelProperty(value = "")
+
+
   public Long getId() {
     return id;
   }
@@ -45,6 +50,8 @@ public class Category   {
    * @return name
   **/
   @ApiModelProperty(value = "")
+
+
   public String getName() {
     return name;
   }

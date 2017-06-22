@@ -2,6 +2,7 @@ package io.swagger.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,24 +10,28 @@ import io.swagger.model.Category;
 import io.swagger.model.Tag;
 import java.util.ArrayList;
 import java.util.List;
-
-
-
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 /**
  * Pet
  */
 
 public class Pet   {
+  @JsonProperty("id")
   private Long id = null;
 
+  @JsonProperty("category")
   private Category category = null;
 
+  @JsonProperty("name")
   private String name = null;
 
+  @JsonProperty("photoUrls")
   private List<String> photoUrls = new ArrayList<String>();
 
-  private List<Tag> tags = new ArrayList<Tag>();
+  @JsonProperty("tags")
+  private List<Tag> tags = null;
 
   /**
    * pet status in the store
@@ -48,8 +53,19 @@ public class Pet   {
     public String toString() {
       return String.valueOf(value);
     }
+
+    @JsonCreator
+    public static StatusEnum fromValue(String text) {
+      for (StatusEnum b : StatusEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
   }
 
+  @JsonProperty("status")
   private StatusEnum status = null;
 
   public Pet id(Long id) {
@@ -62,6 +78,8 @@ public class Pet   {
    * @return id
   **/
   @ApiModelProperty(value = "")
+
+
   public Long getId() {
     return id;
   }
@@ -80,6 +98,9 @@ public class Pet   {
    * @return category
   **/
   @ApiModelProperty(value = "")
+
+  @Valid
+
   public Category getCategory() {
     return category;
   }
@@ -98,6 +119,9 @@ public class Pet   {
    * @return name
   **/
   @ApiModelProperty(example = "doggie", required = true, value = "")
+  @NotNull
+
+
   public String getName() {
     return name;
   }
@@ -121,6 +145,9 @@ public class Pet   {
    * @return photoUrls
   **/
   @ApiModelProperty(required = true, value = "")
+  @NotNull
+
+
   public List<String> getPhotoUrls() {
     return photoUrls;
   }
@@ -135,6 +162,9 @@ public class Pet   {
   }
 
   public Pet addTagsItem(Tag tagsItem) {
+    if (this.tags == null) {
+      this.tags = new ArrayList<Tag>();
+    }
     this.tags.add(tagsItem);
     return this;
   }
@@ -144,6 +174,9 @@ public class Pet   {
    * @return tags
   **/
   @ApiModelProperty(value = "")
+
+  @Valid
+
   public List<Tag> getTags() {
     return tags;
   }
@@ -162,6 +195,8 @@ public class Pet   {
    * @return status
   **/
   @ApiModelProperty(value = "pet status in the store")
+
+
   public StatusEnum getStatus() {
     return status;
   }

@@ -1,12 +1,12 @@
 # petstore_api.StoreApi
 
-All URIs are relative to *http://petstore.swagger.io/v2*
+All URIs are relative to *http://petstore.swagger.io:80/v2*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**delete_order**](StoreApi.md#delete_order) | **DELETE** /store/order/{orderId} | Delete purchase order by ID
+[**delete_order**](StoreApi.md#delete_order) | **DELETE** /store/order/{order_id} | Delete purchase order by ID
 [**get_inventory**](StoreApi.md#get_inventory) | **GET** /store/inventory | Returns pet inventories by status
-[**get_order_by_id**](StoreApi.md#get_order_by_id) | **GET** /store/order/{orderId} | Find purchase order by ID
+[**get_order_by_id**](StoreApi.md#get_order_by_id) | **GET** /store/order/{order_id} | Find purchase order by ID
 [**place_order**](StoreApi.md#place_order) | **POST** /store/order | Place an order for a pet
 
 
@@ -19,6 +19,7 @@ For valid response try integer IDs with value < 1000. Anything above 1000 or non
 
 ### Example 
 ```python
+from __future__ import print_function
 import time
 import petstore_api
 from petstore_api.rest import ApiException
@@ -32,7 +33,7 @@ try:
     # Delete purchase order by ID
     api_instance.delete_order(order_id)
 except ApiException as e:
-    print "Exception when calling StoreApi->delete_order: %s\n" % e
+    print("Exception when calling StoreApi->delete_order: %s\n" % e)
 ```
 
 ### Parameters
@@ -65,6 +66,7 @@ Returns a map of status codes to quantities
 
 ### Example 
 ```python
+from __future__ import print_function
 import time
 import petstore_api
 from petstore_api.rest import ApiException
@@ -83,7 +85,7 @@ try:
     api_response = api_instance.get_inventory()
     pprint(api_response)
 except ApiException as e:
-    print "Exception when calling StoreApi->get_inventory: %s\n" % e
+    print("Exception when calling StoreApi->get_inventory: %s\n" % e)
 ```
 
 ### Parameters
@@ -113,6 +115,7 @@ For valid response try integer IDs with value <= 5 or > 10. Other values will ge
 
 ### Example 
 ```python
+from __future__ import print_function
 import time
 import petstore_api
 from petstore_api.rest import ApiException
@@ -127,7 +130,7 @@ try:
     api_response = api_instance.get_order_by_id(order_id)
     pprint(api_response)
 except ApiException as e:
-    print "Exception when calling StoreApi->get_order_by_id: %s\n" % e
+    print("Exception when calling StoreApi->get_order_by_id: %s\n" % e)
 ```
 
 ### Parameters
@@ -160,6 +163,7 @@ Place an order for a pet
 
 ### Example 
 ```python
+from __future__ import print_function
 import time
 import petstore_api
 from petstore_api.rest import ApiException
@@ -174,7 +178,7 @@ try:
     api_response = api_instance.place_order(body)
     pprint(api_response)
 except ApiException as e:
-    print "Exception when calling StoreApi->place_order: %s\n" % e
+    print("Exception when calling StoreApi->place_order: %s\n" % e)
 ```
 
 ### Parameters

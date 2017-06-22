@@ -2,25 +2,29 @@ package io.swagger.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.joda.time.DateTime;
-
-
-
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 /**
  * Order
  */
 
 public class Order   {
+  @JsonProperty("id")
   private Long id = null;
 
+  @JsonProperty("petId")
   private Long petId = null;
 
+  @JsonProperty("quantity")
   private Integer quantity = null;
 
+  @JsonProperty("shipDate")
   private DateTime shipDate = null;
 
   /**
@@ -43,10 +47,22 @@ public class Order   {
     public String toString() {
       return String.valueOf(value);
     }
+
+    @JsonCreator
+    public static StatusEnum fromValue(String text) {
+      for (StatusEnum b : StatusEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
   }
 
+  @JsonProperty("status")
   private StatusEnum status = null;
 
+  @JsonProperty("complete")
   private Boolean complete = false;
 
   public Order id(Long id) {
@@ -59,6 +75,8 @@ public class Order   {
    * @return id
   **/
   @ApiModelProperty(value = "")
+
+
   public Long getId() {
     return id;
   }
@@ -77,6 +95,8 @@ public class Order   {
    * @return petId
   **/
   @ApiModelProperty(value = "")
+
+
   public Long getPetId() {
     return petId;
   }
@@ -95,6 +115,8 @@ public class Order   {
    * @return quantity
   **/
   @ApiModelProperty(value = "")
+
+
   public Integer getQuantity() {
     return quantity;
   }
@@ -113,6 +135,9 @@ public class Order   {
    * @return shipDate
   **/
   @ApiModelProperty(value = "")
+
+  @Valid
+
   public DateTime getShipDate() {
     return shipDate;
   }
@@ -131,6 +156,8 @@ public class Order   {
    * @return status
   **/
   @ApiModelProperty(value = "Order Status")
+
+
   public StatusEnum getStatus() {
     return status;
   }
@@ -149,6 +176,8 @@ public class Order   {
    * @return complete
   **/
   @ApiModelProperty(value = "")
+
+
   public Boolean getComplete() {
     return complete;
   }
