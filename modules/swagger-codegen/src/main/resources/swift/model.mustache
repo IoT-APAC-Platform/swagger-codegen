@@ -12,11 +12,16 @@ import Foundation
 /** {{description}} */{{/description}}
 public class {{classname}}: JSONEncodable {
 {{#vars}}
-{{#isEnum}}
+{{#isEnum}}{{^isContainer}}
     public enum {{datatypeWithEnum}}: String { {{#allowableValues}}{{#values}}
         case {{enum}} = "{{raw}}"{{/values}}{{/allowableValues}}
     }
-{{/isEnum}}
+{{/isContainer}}
+{{#isContainer}}
+    public enum {{enumName}}: String { {{#allowableValues}}{{#values}}
+        case {{enum}} = "{{raw}}"{{/values}}{{/allowableValues}}
+    }
+{{/isContainer}}{{/isEnum}}
 {{/vars}}
 {{#vars}}
 {{#isEnum}}
