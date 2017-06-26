@@ -189,7 +189,7 @@ class Decoders {
 
                 if let sourceDictionary = source as? [NSObject:AnyObject] {
                 {{#unwrapRequired}}
-                let instance = {{classname}}({{#requiredVars}}{{^-first}}, {{/-first}}{{#isEnum}}{{name}}: {{classname}}.{{datatypeWithEnum}}(rawValue: (sourceDictionary["{{baseName}}"] as? String) ?? "")! {{/isEnum}}{{^isEnum}}{{name}}: Decoders.decode(clazz: {{{baseType}}}.self, source: sourceDictionary["{{baseName}}"]!){{/isEnum}}{{/requiredVars}})
+                let instance = {{classname}}({{#requiredVars}}{{^-first}}, {{/-first}}{{#isEnum}}{{name}}: {{classname}}.{{baseType}}(rawValue: (sourceDictionary["{{baseName}}"] as? String) ?? "")! {{/isEnum}}{{^isEnum}}{{name}}: Decoders.decode(clazz: {{{baseType}}}.self, source: sourceDictionary["{{baseName}}"]!){{/isEnum}}{{/requiredVars}})
                 {{#optionalVars}}
                 {{#isEnum}}
                 instance.{{name}} = {{classname}}.{{datatypeWithEnum}}(rawValue: (sourceDictionary["{{baseName}}"] as? String) ?? "")
@@ -201,7 +201,7 @@ class Decoders {
                 {{/unwrapRequired}}
                 {{^unwrapRequired}}
                 let instance = {{classname}}(){{#vars}}{{#isEnum}}
-                instance.{{name}} = {{classname}}.{{datatypeWithEnum}}(rawValue: (sourceDictionary["{{baseName}}"] as? String) ?? "") {{/isEnum}}{{^isEnum}}
+                instance.{{name}} = {{classname}}.{{enumName}}(rawValue: (sourceDictionary["{{baseName}}"] as? String) ?? "") {{/isEnum}}{{^isEnum}}
                 instance.{{name}} = try Decoders.decodeOptional(clazz: {{{baseType}}}.self, source: sourceDictionary["{{baseName}}"]){{/isEnum}}{{/vars}}
                 {{/unwrapRequired}}
 				
