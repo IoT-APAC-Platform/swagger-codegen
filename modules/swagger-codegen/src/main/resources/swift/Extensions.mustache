@@ -35,9 +35,22 @@ extension String: JSONEncodable {
     func encodeToJSON() -> AnyObject { return self }
 }
 
+protocol StringRawRepresentable {
+func encodeToJSON() -> AnyObject
+var stringRawValue: String { get }
+}
+
+extension StringRawRepresentable
+where Self: RawRepresentable, Self.RawValue == String {
+var stringRawValue: String { return rawValue }
+func encodeToJSON() -> AnyObject { return self.rawValue }
+}
+
 private func encodeIfPossible<T>(object: T) -> AnyObject {
     if object is JSONEncodable {
         return (object as! JSONEncodable).encodeToJSON()
+    } else if object is StringRawRepresentable {
+        return (object as! StringRawRepresentable).encodeToJSON()
     } else {
         return object as! AnyObject
     }
