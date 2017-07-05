@@ -200,11 +200,25 @@ class Decoders {
                 {{/optionalVars}}
                 {{/unwrapRequired}}
                 {{^unwrapRequired}}
-                let instance = {{classname}}(){{#vars}}{{#isEnum}}
-                instance.{{name}} = {{classname}}.{{enumName}}(rawValue: (sourceDictionary["{{baseName}}"] as? String) ?? "") {{/isEnum}}{{^isEnum}}
+                    let instance = {{classname}}(){{#vars}}{{#isEnum}}
+                    {{#isContainer}}
+                    if let {{name}}Strings = sourceDictionary["{{baseName}}"] as? [String] {
+                        instance.{{name}} = {{name}}Strings.map({( sourceString : String) -> {{classname}}.{{enumName}} in
+                            return {{classname}}.{{enumName}}(rawValue: sourceString)!
+                        })
+                    }
+
+             //   instance.{{name}} = {{classname}}.{{datatypeWithEnum}}(rawValue: (sourceDictionary["{{baseName}}"] as? String) ?? "")
+                       // CONTAINER
+                    {{/isContainer}}
+                    {{^isContainer}}
+                instance.{{name}} = {{classname}}.{{enumName}}(rawValue: (sourceDictionary["{{baseName}}"] as? String) ?? "")
+                      //  NOTJDLCONTAINER
+                    {{/isContainer}}
+                {{/isEnum}}{{^isEnum}}
                 instance.{{name}} = try Decoders.decodeOptional(clazz: {{{baseType}}}.self, source: sourceDictionary["{{baseName}}"]){{/isEnum}}{{/vars}}
                 {{/unwrapRequired}}
-				
+
 				return instance
                 }
 
