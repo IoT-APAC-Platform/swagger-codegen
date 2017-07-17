@@ -190,7 +190,7 @@ class AlamofireRequestBuilder<T>: RequestBuilder<T> {
                         completion(response: nil, error: ErrorResponse.Error(response.response?.statusCode ?? 500, response.data, response.result.error!))
                             return
                     }
-                    completion(response: nil, error: ErrorResponse.Error(500, nil, NSError(domain: "localhost", code: 403, userInfo: [NSLocalizedDescriptionKey: errorString])))
+                    completion(response: nil, error:NSError(domain: "localhost", code: 403, userInfo: [NSLocalizedDescriptionKey: errorString]))
                     return
                 }
 
