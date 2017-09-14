@@ -36,6 +36,7 @@ open class RequestBuilder<T> {
     let isBody: Bool
     let method: String
     let URLString: String
+    public var customURLSessionConfiguration : URLSessionConfiguration?
 
     /// Optional block to obtain a reference to the request's progress instance when available.
     public var onProgressReady: ((Progress) -> ())?
