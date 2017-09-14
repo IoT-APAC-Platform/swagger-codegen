@@ -231,34 +231,31 @@ public interface FakeApi {
     @retrofit.http.Field("enum_form_string_array") List<String> enumFormStringArray, @retrofit.http.Field("enum_form_string") String enumFormString, @retrofit.http.Header("enum_header_string_array") List<String> enumHeaderStringArray, @retrofit.http.Header("enum_header_string") String enumHeaderString, @retrofit.http.Query("enum_query_string_array") CSVParams enumQueryStringArray, @retrofit.http.Query("enum_query_string") String enumQueryString, @retrofit.http.Query("enum_query_integer") Integer enumQueryInteger, @retrofit.http.Field("enum_query_double") Double enumQueryDouble, Callback<Void> cb
   );
   /**
-   * To test enum query parameters
+   * test json serialization of form data
    * Sync method
    * 
-   * @param enumQueryString Query parameter enum test (string) (optional, default to -efg)
-   * @param enumQueryInteger Query parameter enum test (double) (optional)
-   * @param enumQueryDouble Query parameter enum test (double) (optional)
+   * @param param field1 (required)
+   * @param param2 field2 (required)
    * @return Void
    */
   
-  @FormUrlEncoded
-  @GET("/fake")
-  Void testEnumQueryParameters(
-    @Field("enum_query_string") String enumQueryString, @Query("enum_query_integer") BigDecimal enumQueryInteger, @Field("enum_query_double") Double enumQueryDouble
+  @retrofit.http.FormUrlEncoded
+  @GET("/fake/jsonFormData")
+  Void testJsonFormData(
+    @retrofit.http.Field("param") String param, @retrofit.http.Field("param2") String param2
   );
 
   /**
-   * To test enum query parameters
+   * test json serialization of form data
    * Async method
-   * @param enumQueryString Query parameter enum test (string) (optional, default to -efg)
-   * @param enumQueryInteger Query parameter enum test (double) (optional)
-   * @param enumQueryDouble Query parameter enum test (double) (optional)
+   * @param param field1 (required)
+   * @param param2 field2 (required)
    * @param cb callback method
-   * @return void
    */
   
-  @FormUrlEncoded
-  @GET("/fake")
-  void testEnumQueryParameters(
-    @Field("enum_query_string") String enumQueryString, @Query("enum_query_integer") BigDecimal enumQueryInteger, @Field("enum_query_double") Double enumQueryDouble, Callback<Void> cb
+  @retrofit.http.FormUrlEncoded
+  @GET("/fake/jsonFormData")
+  void testJsonFormData(
+    @retrofit.http.Field("param") String param, @retrofit.http.Field("param2") String param2, Callback<Void> cb
   );
 }

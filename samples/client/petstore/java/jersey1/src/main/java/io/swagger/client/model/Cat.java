@@ -1,4 +1,4 @@
-/**
+/*
  * Swagger Petstore
  * This spec is mainly for testing Petstore server and contains fake endpoints, models. Please do not use this for any other purpose. Special characters: \" \\
  *
@@ -49,8 +49,8 @@ public class Cat extends Animal  {
    * Get declawed
    * @return declawed
   **/
-  @ApiModelProperty(example = "null", value = "")
-  public Boolean getDeclawed() {
+  @ApiModelProperty(value = "")
+  public Boolean isDeclawed() {
     return declawed;
   }
 
@@ -97,5 +97,6 @@ public class Cat extends Animal  {
     }
     return o.toString().replace("\n", "\n    ");
   }
+
 }
 

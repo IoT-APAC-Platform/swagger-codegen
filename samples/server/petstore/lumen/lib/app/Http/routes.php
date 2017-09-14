@@ -55,6 +55,13 @@ $app->POST('/v2/fake', 'FakeApi@testEndpointParameters');
  */
 $app->GET('/v2/fake', 'FakeApi@testEnumQueryParameters');
 /**
+ * PATCH testClassname
+ * Summary: To test class name in snake case
+ * Notes: 
+ * Output-Formats: [application/json]
+ */
+$app->PATCH('/v2/fake_classname_test', 'Fake_classname_tags123Api@testClassname');
+/**
  * POST addPet
  * Summary: Add a new pet to the store
  * Notes: 

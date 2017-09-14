@@ -2,6 +2,7 @@ package io.swagger.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,6 +10,9 @@ import io.swagger.model.Category;
 import io.swagger.model.Tag;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.validation.annotation.Validated;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 
 
@@ -16,6 +20,8 @@ import java.util.List;
 /**
  * Pet
  */
+@ApiModel(description = "A pet for sale in the pet store")
+@Validated
 
 public class Pet   {
   private Long id = null;
@@ -24,9 +30,13 @@ public class Pet   {
 
   private String name = null;
 
+  @JsonProperty("photoUrls")
+  @Valid
   private List<String> photoUrls = new ArrayList<String>();
 
-  private List<Tag> tags = new ArrayList<Tag>();
+  @JsonProperty("tags")
+  @Valid
+  private List<Tag> tags = null;
 
   /**
    * pet status in the store

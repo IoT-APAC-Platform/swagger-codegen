@@ -1,4 +1,4 @@
-/**
+/*
  * Swagger Petstore
  * This spec is mainly for testing Petstore server and contains fake endpoints, models. Please do not use this for any other purpose. Special characters: \" \\
  *
@@ -30,8 +30,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
+import java.util.UUID;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.OffsetDateTime;
 
 
 /**
@@ -70,7 +71,7 @@ public class FormatTest   {
   private LocalDate date = null;
 
   @JsonProperty("dateTime")
-  private DateTime dateTime = null;
+  private OffsetDateTime dateTime = null;
 
   @JsonProperty("uuid")
   private String uuid = null;
@@ -268,7 +269,7 @@ public class FormatTest   {
     this.date = date;
   }
 
-  public FormatTest dateTime(DateTime dateTime) {
+  public FormatTest dateTime(OffsetDateTime dateTime) {
     this.dateTime = dateTime;
     return this;
   }
@@ -277,12 +278,12 @@ public class FormatTest   {
    * Get dateTime
    * @return dateTime
   **/
-  @ApiModelProperty(example = "null", value = "")
-  public DateTime getDateTime() {
+  @ApiModelProperty(value = "")
+  public OffsetDateTime getDateTime() {
     return dateTime;
   }
 
-  public void setDateTime(DateTime dateTime) {
+  public void setDateTime(OffsetDateTime dateTime) {
     this.dateTime = dateTime;
   }
 
@@ -384,5 +385,6 @@ public class FormatTest   {
     }
     return o.toString().replace("\n", "\n    ");
   }
+
 }
 
