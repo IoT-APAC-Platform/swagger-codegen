@@ -61,7 +61,7 @@ open class {{classname}}: APIBase {
             if let error = error {
                 deferred.reject(error)
             } else {
-                deferred.fulfill({{#returnType}}data!{{/returnType}})
+                deferred.fulfill({{#returnType}}data!{{/returnType}}{{^returnType}}(){{/returnType}})
             }
         }
         return deferred.promise
@@ -159,7 +159,7 @@ open class {{classname}}: APIBase {
         {{/hasMore}}
         {{/headerParams}}
 
-        let requestBuilder: RequestBuilder<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}Void{{/returnType}}>.Type = {{projectName}}API.requestBuilderFactory.{{#returnType}}getBuilder(){{/returnType}}{{^returnType}}getNonDecodableBuilder(){{/returnType}}
+        let requestBuilder: RequestBuilder<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}Void{{/returnType}}>.Type = {{projectName}}API.requestBuilderFactory.getBuilder()
 
         return requestBuilder.init(method: "{{httpMethod}}", URLString: (url?.string ?? URLString), parameters: parameters, isBody: {{hasBodyParam}}{{#headerParams}}{{^secondaryParam}}, headers: headerParameters{{/secondaryParam}}{{/headerParams}})
     }

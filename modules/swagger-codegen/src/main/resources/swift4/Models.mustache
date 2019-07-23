@@ -11,13 +11,14 @@ protocol JSONEncodable {
 }
 
 public enum ErrorResponse : Error {
-    case Error(Int, Data?, Error)
+    case HttpError(statusCode: Int, data: Data?, error: Error)
+    case DecodeError(response: Data?, decodeError: DecodeError)
 }
 
 open class Response<T> {
-    open let statusCode: Int
-    open let header: [String: String]
-    open let body: T?
+    public let statusCode: Int
+    public let header: [String: String]
+    public let body: T?
 
     public init(statusCode: Int, header: [String: String], body: T?) {
         self.statusCode = statusCode
@@ -34,7 +35,6 @@ open class Response<T> {
         self.init(statusCode: response.statusCode, header: header, body: body)
     }
 }
-
 
 public enum Decoded<ValueType> {
     case success(ValueType)
@@ -102,7 +102,7 @@ class Decoders {
         }
     }
 
-    static open func decode<T: RawRepresentable>(clazz: T.Type, source: AnyObject) -> Decoded<T> {
+    static public func decode<T: RawRepresentable>(clazz: T.Type, source: AnyObject) -> Decoded<T> {
         if let value = source as? T.RawValue {
             if let enumValue = T.init(rawValue: value) {
                 return .success(enumValue)
