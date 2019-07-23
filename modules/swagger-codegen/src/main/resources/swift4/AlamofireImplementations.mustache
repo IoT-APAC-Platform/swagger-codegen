@@ -56,8 +56,18 @@ open class AlamofireRequestBuilder<T>: RequestBuilder<T> {
 
     override open func execute(_ completion: @escaping (_ response: Response<T>?, _ error: Error?) -> Void) {
         let managerId:String = UUID().uuidString
-        // Create a new manager for each request to customize its request header
-        let manager = createSessionManager()
+
+        // Get an optionnal custom manager in order to use NSURLProtocol
+        var configuration = self.customURLSessionConfiguration
+        if configuration == nil  {
+            // Create a new manager for each request to customize its request header
+            configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        }
+        configuration!.HTTPAdditionalHeaders = buildHeaders()
+
+
+        let manager = Alamofire.Manager(configuration: configuration!)
+
         managerStore[managerId] = manager
 
         let encoding:ParameterEncoding = isBody ? JSONDataEncoding() : URLEncoding()

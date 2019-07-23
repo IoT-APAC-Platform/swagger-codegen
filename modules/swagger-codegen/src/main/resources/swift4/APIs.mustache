@@ -7,10 +7,26 @@
 import Foundation
 
 open class {{projectName}}API {
-    open static var basePath = "{{{basePath}}}"
-    open static var credential: URLCredential?
-    open static var customHeaders: [String:String] = [:]
-    open static var requestBuilderFactory: RequestBuilderFactory = AlamofireRequestBuilderFactory()
+    public static var basePath = "{{{basePath}}}"
+    public static var credential: URLCredential?
+    public static var customHeaders: [String:String] = [:]
+    public static var requestBuilderFactory: RequestBuilderFactory = AlamofireRequestBuilderFactory()
+}
+
+open class APIBase {
+    func toParameters(_ encodable: JSONEncodable?) -> [String: Any]? {
+        let encoded: Any? = encodable?.encodeToJSON()
+
+        if encoded! is [Any] {
+            var dictionary = [String:Any]()
+            for (index, item) in (encoded as! [Any]).enumerated() {
+                dictionary["\(index)"] = item
+            }
+            return dictionary
+        } else {
+            return encoded as? [String:Any]
+        }
+    }
 }
 
 open class RequestBuilder<T> {
@@ -20,6 +36,7 @@ open class RequestBuilder<T> {
     let isBody: Bool
     let method: String
     let URLString: String
+    public var customURLSessionConfiguration : URLSessionConfiguration?
 
     /// Optional block to obtain a reference to the request's progress instance when available.
     public var onProgressReady: ((Progress) -> ())?
